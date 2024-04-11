@@ -24,6 +24,7 @@ public class Account {
     private String email;       // 이메일
     @Setter
     private String businessNumber;  // 사업자 등록번호
+
     @Setter
     @Enumerated(EnumType.STRING)
     private Authority authority;    // 권한

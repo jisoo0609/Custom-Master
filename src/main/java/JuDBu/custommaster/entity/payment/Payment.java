@@ -1,6 +1,7 @@
 package JuDBu.custommaster.entity.payment;
 
 import JuDBu.custommaster.entity.account.Account;
+import JuDBu.custommaster.entity.order.Ord;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,6 @@ public class Payment {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "ord_id")
+    private Ord ord;
 }
