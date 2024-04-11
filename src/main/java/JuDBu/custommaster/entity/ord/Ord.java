@@ -1,8 +1,7 @@
-package JuDBu.custommaster.entity.order;
+package JuDBu.custommaster.entity.ord;
 
 import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.product.Product;
-import JuDBu.custommaster.entity.shop.Shop;
 import jakarta.persistence.*;
 import lombok.*;
 

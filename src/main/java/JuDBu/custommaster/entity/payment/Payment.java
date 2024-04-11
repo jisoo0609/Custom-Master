@@ -1,7 +1,6 @@
 package JuDBu.custommaster.entity.payment;
 
-import JuDBu.custommaster.entity.account.Account;
-import JuDBu.custommaster.entity.order.Ord;
+import JuDBu.custommaster.entity.ord.Ord;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
