@@ -1,16 +1,21 @@
 package JuDBu.custommaster.entity.shop;
 
-import JuDBu.custommaster.entity.account.Account;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter
+    private String name;
+    @Setter
+    private String address;
 
-    private String namm;
-
-    private Account account
+    private String phoneNumber;
 }
