@@ -31,6 +31,9 @@ public class Ord {
     private LocalDateTime ordTime;
     private Integer totalPrice;
 
+    private String tossPaymentKey;
+    private String tossOrderId;
+
     @Setter
     @Builder.Default
     @Enumerated(EnumType.STRING)
