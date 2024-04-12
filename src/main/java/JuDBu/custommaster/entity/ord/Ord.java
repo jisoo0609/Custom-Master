@@ -29,6 +29,7 @@ public class Ord {
 
     private LocalDateTime pickUpDate;
     private LocalDateTime ordTime;
+    @Setter
     private Integer totalPrice;
 
     @Setter
