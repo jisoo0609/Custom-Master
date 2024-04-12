@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Entity
 @ToString
@@ -28,6 +31,14 @@ public class Review {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    @Setter
     private String comment;
+
+    @Setter
     private Long orderId;
+
+
+    @Setter
+    @ElementCollection
+    private final List<String> images = new ArrayList<>();
 }
