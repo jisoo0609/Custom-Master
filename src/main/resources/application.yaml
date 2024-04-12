@@ -48,6 +48,8 @@ spring:
             scope:
               - email
               - name
+toss:
+  secret: test_sk_jExPeJWYVQqoZaQge7RpV49R5gvN
 ncp:
   api:
     client-id: re2p8027kc

@@ -25,7 +25,7 @@ public class ProductDto {
                 .exPrice(product.getExPrice())
                 .resultPrice(product.getResultPrice())
                 .quantity(product.getQuantity())
-                .exImage(product.getExImage())
+                //.exImage(product.getExImage())
                 .build();
     }
 }
