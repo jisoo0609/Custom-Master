@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/order-accept/{shopId}")
+@RequestMapping("/api/{shopId}/order-accept")
 @RequiredArgsConstructor
 public class OrdAcceptRestController {
     private final OrdAcceptService ordAcceptService;
