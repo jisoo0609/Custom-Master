@@ -16,16 +16,29 @@ public class Account {
     private String username;    // 유저 아이디
     @Column(nullable = false)
     private String password;    // 비밀번호
-    @Setter
     @Column(nullable = false)
     private String name;        // 유저 이름
-    @Setter
     @Column(nullable = false)
     private String email;       // 이메일
-    @Setter
     private String businessNumber;  // 사업자 등록번호
-
-    @Setter
     @Enumerated(EnumType.STRING)
+    @Setter
     private Authority authority;    // 권한
+
+    public void updateInfo(
+                       String password,
+                       String name,
+                       String email
+    ){
+
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+    public void updateBusinessNumber(
+                           String businessNumber
+    ){
+
+        this.businessNumber = businessNumber;
+    }
 }
