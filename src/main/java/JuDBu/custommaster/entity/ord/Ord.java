@@ -46,6 +46,9 @@ public class Ord {
     private Integer totalPrice;
     private String exImagePath;
 
+    private String tossPaymentKey;
+    private String tossOrderId;
+
     @Setter
     @Builder.Default
     @Enumerated(EnumType.STRING)
