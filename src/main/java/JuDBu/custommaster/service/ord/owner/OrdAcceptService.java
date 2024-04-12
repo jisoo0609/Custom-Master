@@ -81,4 +81,52 @@ public class OrdAcceptService {
 
         return ProductDto.fromEntity(product);
     }
+
+    // 주문 승락
+    public OrdDto accept(Long shopId, Long ordId, Integer totalPrice) {
+        // 매장 주인인지 확인
+
+        // 매장에 속한 주문인지 확인
+        Ord target = ordRepo.findById(ordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Shop shop = target.getProduct().getShop();
+
+        if (!shopId.equals(shop.getId())) {
+            log.error("해당 매장의 주문이 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 주문 승락
+        if (target.getStatus().equals(Ord.Status.CONFIRMED)) {
+            log.error("이미 완료된 주문입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        target.setStatus(Ord.Status.CONFIRMED);
+        target.setTotalPrice(totalPrice);
+        ordRepo.save(target);
+
+        return OrdDto.fromEntity(target);
+    }
+
+    // 주문 거절
+    public void deleteOrd(Long shopId, Long ordId) {
+        // 매장 주인인지 확인
+
+        // 매장에 속한 주문인지 확인
+        Ord target = ordRepo.findById(ordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Shop shop = target.getProduct().getShop();
+
+        if (!shopId.equals(shop.getId())) {
+            log.error("해당 매장의 주문이 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 주문 거절
+        target.setStatus(Ord.Status.DECLINED);
+        log.info("Status: {}", target.getStatus());
+        ordRepo.delete(target);
+    }
 }
