@@ -17,10 +17,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   /* @Setter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "shop_id")
-    private Shop shop;*/
+    private Shop shop;
 
     private String name;
     private Integer exPrice;
