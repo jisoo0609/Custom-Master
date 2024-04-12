@@ -1,15 +1,15 @@
 package JuDBu.custommaster.dto.ord;
 
 import JuDBu.custommaster.entity.ord.Ord;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-
 public class OrdDto {
     private Long id;
     private Long accountId;
@@ -29,4 +29,5 @@ public class OrdDto {
                 .status(ord.getStatus())
                 .build();
     }
+
 }

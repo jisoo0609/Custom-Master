@@ -25,5 +25,6 @@ public class Product {
     private String name;
     private Integer exPrice;
     private String exImage;
+    private Integer resultPrice;
     private Integer quantity;
 }
