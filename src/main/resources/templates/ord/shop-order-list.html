@@ -3,8 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Order List</title>
+    <style>.pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .page-link {
+        padding: 5px 10px;
+        background-color: #f4f4f4;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .page-link:hover {
+        background-color: #ccc;
+    }
+    </style>
 </head>
 <body>
+
     <h2>주문 목록</h2>
     <!-- 주문이 없는 경우 -->
     <div th:if="${ords.isEmpty()}">
@@ -33,6 +56,30 @@
             <p th:text="${accounts[idx.index]}" style="margin: 0 10px 0 0; width: 100px;"></p>
             <p th:text="${ord.getOrdTime()}" style="margin: 0 10px 0 0; width: 100px;"></p>
             <p th:text="${ord.getStatus()}" style="margin: 0;"></p>
+        </div>
+    </div>
+
+    <!-- 페이지 -->
+    <div class="pagination">
+        <!-- 이전 페이지 버튼 -->
+        <div class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </div>
+
+        <!-- 페이지 번호 -->
+        <div th:each="page,iterStat : ${ords}">
+            <div class="page-item">
+                <a class="page-link" th:href="@{/order-accept/__${shopId}__/read-all(page=${iterStat.index}, size=${ords.size})}" th:text="${iterStat.index + 1}"></a>
+            </div>
+        </div>
+
+        <!-- 다음 페이지 버튼 -->
+        <div class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
         </div>
     </div>
 </body>

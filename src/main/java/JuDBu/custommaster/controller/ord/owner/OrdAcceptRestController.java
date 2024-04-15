@@ -17,12 +17,12 @@ public class OrdAcceptRestController {
     private final OrdAcceptService ordAcceptService;
 
     // 주문 리스트 불러오기
-    @GetMapping("/read-all")
+/*    @GetMapping("/read-all")
     public List<OrdDto> ordList(
             @PathVariable("shopId") Long shopId
     ) {
         return ordAcceptService.readAllOrdByShop(shopId);
-    }
+    }*/
 
     // 주문 리스트에서 Product name 불러오기
     @GetMapping("/read-name")

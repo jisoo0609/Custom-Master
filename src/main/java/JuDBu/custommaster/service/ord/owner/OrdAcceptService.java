@@ -9,6 +9,8 @@ import JuDBu.custommaster.repo.ord.OrdRepo;
 import JuDBu.custommaster.repo.product.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,17 +27,15 @@ public class OrdAcceptService {
     private final ProductRepo productRepo;
 
     // Shop에 있는 주문 전체 불러오기
-    public List<OrdDto> readAllOrdByShop(Long shopId) {
+    public Page<OrdDto> readAllOrdByShop(Long shopId, Pageable pageable) {
         // 매장 주인인지 확인
 
         // 해당 매장의 주문 불러오기
-        List<Ord> ords = ordRepo.findByShop_Id(shopId)
+        Page<Ord> ords = ordRepo.findByShop_IdOrderByIdDesc(shopId, pageable)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info(ords.toString());
 
-        return ords.stream()
-                .map(OrdDto::fromEntity)
-                .collect(Collectors.toList());
+        return ords.map(OrdDto::fromEntity);
     }
 
     // 주문 리스트에서 Product name 불러오기
@@ -70,6 +70,7 @@ public class OrdAcceptService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return ordStatus.stream()
+                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
                 .map(Ord::getStatus)
                 .toList();
     }
