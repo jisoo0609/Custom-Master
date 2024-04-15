@@ -18,20 +18,26 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils {
     // JWT를 만드는 용도의 암호키
-    private final Key signingKey;
+    private final Key accessSigningKey;
+    private final Key refreshSigningKey;
     // JWT를 해석하는 용도의 객체
-    private final JwtParser jwtParser;
+    private JwtParser jwtParser;
 
-    public JwtTokenUtils(@Value("${jwt.secret}") String jwtSecret) {
-        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-        this.jwtParser = Jwts
-                .parserBuilder()
-                .setSigningKey(this.signingKey)
-                .build();
+    public JwtTokenUtils(
+            @Value("${jwt.secret}")
+            String jwtAccessSecret,
+            @Value("${jwt.refresh-secret}")
+            String jwtRefreshSecret
+    ) {
+        this.accessSigningKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
+        this.refreshSigningKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
     }
 
     // UserDetails를 받아 JWT로 변환
     public String generateToken(UserDetails userDetails) {
+        jwtParser = Jwts.parserBuilder()
+                .setSigningKey(accessSigningKey)
+                .build();
         // 호출되었을때 time
         Instant now = Instant.now();
         Claims jwtClaims = Jwts.claims()
@@ -45,7 +51,25 @@ public class JwtTokenUtils {
 
         return Jwts.builder()
                 .setClaims(jwtClaims)
-                .signWith(this.signingKey)
+                .signWith(accessSigningKey)
+                .compact();
+    }
+    public String generateRefreshToken(UserDetails userDetails) {
+        jwtParser = Jwts.parserBuilder()
+                .setSigningKey(refreshSigningKey)
+                .build();
+        // 호출되었을때 time
+        Instant now = Instant.now();
+        Claims jwtClaims = Jwts.claims()
+                // 사용자 이름
+                .setSubject(userDetails.getUsername())
+                // 발급 시간
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds((60 * 60 * 24 * 7))));
+
+        return Jwts.builder()
+                .setClaims(jwtClaims)
+                .signWith(refreshSigningKey)
                 .compact();
     }
 
