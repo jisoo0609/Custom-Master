@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/{shopId}/order-accept")
+@RequestMapping("/api/order-accept/{shopId}")
 @RequiredArgsConstructor
 public class OrdAcceptRestController {
     private final OrdAcceptService ordAcceptService;

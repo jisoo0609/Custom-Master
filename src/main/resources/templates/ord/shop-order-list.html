@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+</head>
+<body>
+    <h2>주문 목록</h2>
+    <!-- 주문이 없는 경우 -->
+    <div th:if="${ords.isEmpty()}">
+        <p>요청된 주문이 없습니다.</p>
+    </div>
+
+    <!-- 주문이 있는 경우 -->
+    <div id="order-list" th:unless="${ords.isEmpty()}" th:each="ord : ${ords}">
+        <div>
+            <a th:href="@{/ord/{id}(id=${ord.id})}"><h3 th:text="${ord.getId()}"></h3></a>
+        </div>
+    </div>
+</body>
+<script>
+
+</script>
+</html>
