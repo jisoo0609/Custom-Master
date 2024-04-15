@@ -26,16 +26,9 @@ public class OrdAcceptService {
     public List<OrdDto> readAllOrdByShop(Long shopId) {
         // 매장 주인인지 확인
 
-        // 전체 주문 가져옴
-        List<Ord> ordList = ordRepo.findAll();
-
-        // 해당 매장의 주문인 경우 List에 저장
-        List<Ord> ords = new ArrayList<>();
-        for (Ord ord : ordList) {
-            if (ord.getProduct().getShop().getId().equals(shopId)) {
-                ords.add(ord);
-            }
-        }
+        // 해당 매장의 주문 불러오기
+        List<Ord> ords = ordRepo.findByShop_Id(shopId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info(ords.toString());
 
         return ords.stream()
@@ -48,15 +41,8 @@ public class OrdAcceptService {
         // 매장 주인인지 확인
 
         // 매장에 속한 주문인지 확인
-        Ord ord = ordRepo.findById(ordId)
+        Ord ord = ordRepo.findByProductShop_IdAndId(shopId, ordId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        Shop shop = ord.getProduct().getShop();
-
-        if (!shopId.equals(shop.getId())) {
-            log.error("해당 매장의 주문이 아닙니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
 
         return OrdDto.fromEntity(ord);
     }
@@ -69,14 +55,16 @@ public class OrdAcceptService {
         Ord ord = ordRepo.findById(ordId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Shop shop = ord.getProduct().getShop();
-
-        if (!shopId.equals(shop.getId())) {
+        if (!shopId.equals(ord.getShop().getId())) {
             log.error("해당 매장의 주문이 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         // 매장의 주문이 맞다면 해당 주문의 Product 가져오기
+        if (ord.getProduct() == null) {
+            log.error("주문 제품 정보가 없습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         Product product = ord.getProduct();
 
         return ProductDto.fromEntity(product);

@@ -30,7 +30,7 @@ public class OrdAcceptRestController {
     }
 
     @GetMapping("/read/{id}/details")
-    public ProductDto readProductDtails(
+    public ProductDto readProductDetails(
             @PathVariable("shopId") Long shopId,
             @PathVariable("id") Long ordId
     ) {
