@@ -7,5 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
-    Optional<List<Product>> findByShop_Id(Long shopId);
 }
