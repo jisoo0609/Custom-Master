@@ -13,8 +13,13 @@
 
     <!-- 주문이 있는 경우 -->
     <div id="order-list" th:unless="${ords.isEmpty()}" th:each="ord : ${ords}">
-        <div>
-            <a th:href="@{/ord/{id}(id=${ord.id})}"><h3 th:text="${ord.getId()}"></h3></a>
+        <hr>
+        <div style="display: flex; align-items: center;">
+            <a th:href="@{'/order-accept/' + ${shopId} + '/read/' + ${ord.id}}" style="margin-right: 10px;">
+                <p th:text="${ord.getId()}" style="margin: 0;"></p>
+            </a>
+            <p th:text="${ord.getOrdTime()}" style="margin: 0 10px 0 0;"></p>
+            <p th:text="${ord.getStatus()}" style="margin: 0;"></p>
         </div>
     </div>
 </body>
