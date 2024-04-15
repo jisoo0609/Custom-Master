@@ -19,6 +19,21 @@ public class AccountService {
     private final AccountRepo accountRepo;
     private final AuthenticationFacade authFacade;
 
+    public AccountDto readOne(Long id){
+        Account account = accountRepo.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return AccountDto.fromEntity(account);
+    }
+
+    public AccountDto delete(Long id){
+        Account account = accountRepo.findById(id).orElseThrow(()->
+                new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        accountRepo.deleteById(id);
+        return AccountDto.fromEntity(account);
+    }
+
     // 유저 정보 가져오기
     public AccountDto readOneAccount() {
         Account account = authFacade.getAccount();
