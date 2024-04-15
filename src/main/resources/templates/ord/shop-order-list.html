@@ -11,19 +11,29 @@
         <p>요청된 주문이 없습니다.</p>
     </div>
 
+    <div style="display: flex; align-items: center; font-weight: bold;">
+        <p style="width: 100px; margin: 0;">ID</p>
+        <span style="margin-right: 10px;"></span>
+        <p style="width: 100px; margin: 0;">상품명</p>
+        <span style="margin-right: 10px;"></span>
+        <p style="width: 100px; margin: 0">주문자명</p>
+        <span style="margin-right: 10px;"></span>
+        <p style="width: 100px; margin: 0;">날짜</p>
+        <span style="margin-right: 10px;"></span>
+        <p style="width: 100px; margin: 0;">상태</p>
+    </div>
     <!-- 주문이 있는 경우 -->
-    <div id="order-list" th:unless="${ords.isEmpty()}" th:each="ord : ${ords}">
+    <div id="order-list" th:unless="${ords.isEmpty()}" th:each="ord, idx : ${ords}" th:reverse="true" style="margin-bottom: 10px;">
         <hr>
         <div style="display: flex; align-items: center;">
+            <p th:text="${ord.id}" style="margin: 0; width: 100px;"></p>
             <a th:href="@{'/order-accept/' + ${shopId} + '/read/' + ${ord.id}}" style="margin-right: 10px;">
-                <p th:text="${ord.getId()}" style="margin: 0;"></p>
+                <p th:text="${names[idx.index]}" style="margin: 0 10px 0 0; width: 100px;"></p>
             </a>
-            <p th:text="${ord.getOrdTime()}" style="margin: 0 10px 0 0;"></p>
+            <p th:text="${accounts[idx.index]}" style="margin: 0 10px 0 0; width: 100px;"></p>
+            <p th:text="${ord.getOrdTime()}" style="margin: 0 10px 0 0; width: 100px;"></p>
             <p th:text="${ord.getStatus()}" style="margin: 0;"></p>
         </div>
     </div>
 </body>
-<script>
-
-</script>
 </html>

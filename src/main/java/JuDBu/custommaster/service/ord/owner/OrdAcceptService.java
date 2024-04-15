@@ -1,6 +1,7 @@
 package JuDBu.custommaster.service.ord.owner;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
+import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.ord.Ord;
 import JuDBu.custommaster.entity.product.Product;
 import JuDBu.custommaster.entity.shop.Shop;
@@ -34,7 +35,6 @@ public class OrdAcceptService {
 
         return ords.stream()
                 .map(OrdDto::fromEntity)
-                .sorted(Comparator.comparing(OrdDto::getOrdTime).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -48,19 +48,28 @@ public class OrdAcceptService {
         log.info(ords.toString());
 
         return ords.stream()
-                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
                 .map(Ord::getProduct)
                 .map(Product::getName)
                 .collect(Collectors.toList());
     }
 
+    // 주문 리스트에서 주문자명 불러오기
+    public List<String> getAccountName(Long shopId) {
+        List<Ord> ordList = ordRepo.findByShop_Id(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return ordList.stream()
+                .map(Ord::getAccount)
+                .map(Account::getName)
+                .collect(Collectors.toList());
+
+    }
     // 주문 리스트에서 주문 상태 불러오기
     public List<Ord.Status> getOrdStatus(Long shopId) {
         List<Ord> ordStatus = ordRepo.findByShop_Id(shopId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return ordStatus.stream()
-                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
                 .map(Ord::getStatus)
                 .toList();
     }
