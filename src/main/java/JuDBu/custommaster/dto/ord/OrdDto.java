@@ -26,6 +26,7 @@ public class OrdDto {
                 .productId(ord.getProduct().getId())
                 .pickUpDate(ord.getPickUpDate())
                 .ordTime(ord.getOrdTime())
+                .totalPrice(ord.getTotalPrice())
                 .status(ord.getStatus())
                 .build();
     }
