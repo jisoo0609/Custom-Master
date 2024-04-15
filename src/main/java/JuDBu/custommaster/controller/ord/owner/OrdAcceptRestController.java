@@ -1,6 +1,7 @@
 package JuDBu.custommaster.controller.ord.owner;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
+import JuDBu.custommaster.entity.ord.Ord;
 import JuDBu.custommaster.service.ord.owner.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import java.util.List;
 public class OrdAcceptRestController {
     private final OrdAcceptService ordAcceptService;
 
+    // 주문 리스트 불러오기
     @GetMapping("/read-all")
     public List<OrdDto> ordList(
             @PathVariable("shopId") Long shopId
@@ -22,6 +24,23 @@ public class OrdAcceptRestController {
         return ordAcceptService.readAllOrdByShop(shopId);
     }
 
+    // 주문 리스트에서 Product name 불러오기
+    @GetMapping("/read-name")
+    public List<String> orderProductName(
+            @PathVariable("shopId") Long shopId
+    ) {
+        return ordAcceptService.orderProductName(shopId);
+    }
+
+    // 주문 리스트에서 주문 상태 불러오기
+    @GetMapping("/status")
+    public List<Ord.Status> getOrdStatus(
+            @PathVariable("shopId") Long shopId
+    ) {
+        return ordAcceptService.getOrdStatus(shopId);
+    }
+
+    // READ ONE ord
     @GetMapping("/read/{id}")
     public OrdDto readOrd(
             @PathVariable("shopId") Long shopId,
@@ -29,6 +48,7 @@ public class OrdAcceptRestController {
     ) {
         return ordAcceptService.readDetails(shopId, ordId);
     }
+
 
     // 주문 요청 승낙
     @PostMapping("/accept/{ordId}")

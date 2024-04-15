@@ -2,6 +2,7 @@ package JuDBu.custommaster.service.ord.owner;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.entity.ord.Ord;
+import JuDBu.custommaster.entity.product.Product;
 import JuDBu.custommaster.entity.shop.Shop;
 import JuDBu.custommaster.repo.ord.OrdRepo;
 import JuDBu.custommaster.repo.product.ProductRepo;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +29,40 @@ public class OrdAcceptService {
 
         // 해당 매장의 주문 불러오기
         List<Ord> ords = ordRepo.findByShop_Id(shopId)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info(ords.toString());
 
         return ords.stream()
                 .map(OrdDto::fromEntity)
+                .sorted(Comparator.comparing(OrdDto::getOrdTime).reversed())
                 .collect(Collectors.toList());
+    }
+
+    // 주문 리스트에서 Product name 불러오기
+    public List<String> orderProductName(Long shopId) {
+        // 매장 주인인지 확인
+
+        // 해당 매장의 주문 불러오기
+        List<Ord> ords = ordRepo.findByShop_Id(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info(ords.toString());
+
+        return ords.stream()
+                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
+                .map(Ord::getProduct)
+                .map(Product::getName)
+                .collect(Collectors.toList());
+    }
+
+    // 주문 리스트에서 주문 상태 불러오기
+    public List<Ord.Status> getOrdStatus(Long shopId) {
+        List<Ord> ordStatus = ordRepo.findByShop_Id(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return ordStatus.stream()
+                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
+                .map(Ord::getStatus)
+                .toList();
     }
 
     // Shop에 있는 주문 상세 확인
