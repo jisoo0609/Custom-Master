@@ -46,24 +46,24 @@ public class ReviewService {
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
 
-    // article 페이지 단위로 받아오기
+    // review 페이지 단위로 받아오기
     public Page<ReviewDto> readReviewPaged(Pageable pageable) {
         Pageable reversePageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by("id").descending());
 
-        Page<Review> articlesPage = reviewRepository.findAll(reversePageable);
-        List<ReviewDto> articleDtos = articlesPage.getContent().stream()
+        Page<Review> reviewsPage = reviewRepository.findAll(reversePageable);
+        List<ReviewDto> reviewDtos = reviewsPage.getContent().stream()
                 .map(ReviewDto::fromEntity)
                 .collect(Collectors.toList());
-        return new PageImpl<>(articleDtos, reversePageable, articlesPage.getTotalElements());
+        return new PageImpl<>(reviewDtos, reversePageable, reviewsPage.getTotalElements());
     }
 
-    // 특정 articleId의 article 가져오기
-    public ReviewDto readArticle(Long articleId) {
-        Optional<Review> optionalReview = reviewRepository.findById(articleId);
-        // article이 존재하지 않는 경우
+    // 특정 reviewId review 가져오기
+    public ReviewDto readReview(Long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
+        // review가 존재하지 않는 경우
 //        if (optionalArticle.isEmpty())
 //            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
 
@@ -71,7 +71,7 @@ public class ReviewService {
         return ReviewDto.fromEntity(review);
     }
 
-    // article 수정
+    // review 수정
     public ReviewDto updateReview(
             Long id,
             String comment,
@@ -87,28 +87,28 @@ public class ReviewService {
 
         Review review = optionalReview.get();
 //        Member currentMember = facade.getCurrentMember();
-        // TODO : article의 주인이 아닌 경우
+        // TODO : review 주인이 아닌 경우
 //        if (!review.getMember().getId().equals(currentMember.getId())) {
 //            log.info(review.getMember().getId().toString());
 //            log.info(currentMember.getId().toString());
 //            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
 //        }
 
-        // TODO : AccountId 값 받아와야 가능
-//        // Review 수정
-//        review.setComment(comment);
-//        // 기존 이미지 삭제
-//        for (String imagePath : review.getImages()) {
-//            deleteImage(imagePath);
-//        }
-//        review.getImages().clear();
-//
-//        // 새로운 이미지 저장
-//        for (MultipartFile image : images) {
-//            String imagePath = saveImage(image);
-//            imagePath = imagePath.replaceAll("\\\\", "/");
-//            review.getImages().add(imagePath);
-//        }
+        // TODO : ReviewId 값 받아와야 가능
+        // Review 수정
+        review.setComment(comment);
+        // 기존 이미지 삭제
+        for (String imagePath : review.getImages()) {
+            deleteImage(imagePath);
+        }
+        review.getImages().clear();
+
+        // 새로운 이미지 저장
+        for (MultipartFile image : images) {
+            String imagePath = saveImage(image);
+            imagePath = imagePath.replaceAll("\\\\", "/");
+            review.getImages().add(imagePath);
+        }
 
 
         return ReviewDto.fromEntity(reviewRepository.save(review));
@@ -118,13 +118,13 @@ public class ReviewService {
     // TODO : 다시 해야함
     public void deleteReview(Long reviewId) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        // article이 존재하지 않는 경우
+        // review 존재하지 않는 경우
         if (optionalReview.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
 
         Review review = optionalReview.get();
 //        Member currentMember = facade.getCurrentMember();
-        // article의 주인이 아닌 경우
+        // review 주인이 아닌 경우
 //        if (!reviewId.getMember().getId().equals(currentMember.getId()))
 //            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
 
@@ -144,7 +144,7 @@ public class ReviewService {
 //    }
 
     public String saveImage(MultipartFile image) {
-        String imgDir = "media/img/articles/";
+        String imgDir = "media/img/reviews/";
         String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
         Path imgPath = Path.of(imgDir + imgName);
 

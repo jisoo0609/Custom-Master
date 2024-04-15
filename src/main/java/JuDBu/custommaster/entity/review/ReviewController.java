@@ -36,11 +36,11 @@ public class ReviewController {
     }
 
     @GetMapping("{reviewId}")
-    public ReviewDto readArticle(
+    public ReviewDto readReview(
             @PathVariable("reviewId")
-            Long articleId
+            Long reviewId
     ) {
-        return reviewService.readArticle(articleId);
+        return reviewService.readReview(reviewId);
     }
 
     // 댓글 수정
