@@ -1,8 +1,8 @@
-package JuDBu.custommaster.controller.ord.owner;
+package JuDBu.custommaster.controller.ord.accept;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.entity.ord.Ord;
-import JuDBu.custommaster.service.ord.owner.OrdAcceptService;
+import JuDBu.custommaster.service.ord.accept.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

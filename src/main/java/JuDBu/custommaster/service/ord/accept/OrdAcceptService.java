@@ -1,4 +1,4 @@
-package JuDBu.custommaster.service.ord.owner;
+package JuDBu.custommaster.service.ord.accept;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.entity.account.Account;

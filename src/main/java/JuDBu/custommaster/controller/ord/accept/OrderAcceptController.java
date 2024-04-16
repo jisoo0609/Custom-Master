@@ -1,11 +1,10 @@
-package JuDBu.custommaster.controller.ord.owner;
+package JuDBu.custommaster.controller.ord.accept;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
-import JuDBu.custommaster.service.ord.owner.OrdAcceptService;
+import JuDBu.custommaster.service.ord.accept.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +31,7 @@ public class OrderAcceptController {
             Pageable pageable,
             Model model
     ) {
-        Page<OrdDto> ords = ordAcceptService.readAllOrdByShop(shopId, PageRequest.of(0, 10));
+        Page<OrdDto> ords = ordAcceptService.readAllOrdByShop(shopId, pageable);
         List<String> productNames = ordAcceptService.orderProductName(shopId);
         List<String> accountNames = ordAcceptService.getAccountName(shopId);
 

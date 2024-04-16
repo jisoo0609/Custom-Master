@@ -1,11 +1,14 @@
-package JuDBu.custommaster.entity.ord.request;
+package JuDBu.custommaster.service.ord.request;
 
 import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.ord.Ord;
+import JuDBu.custommaster.controller.ord.request.FileHandlerUtils;
+import JuDBu.custommaster.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.entity.product.Product;
 import JuDBu.custommaster.entity.shop.Shop;
 import JuDBu.custommaster.entity.shop.ShopRepository;
 import JuDBu.custommaster.facade.AuthenticationFacade;
+import JuDBu.custommaster.repo.ord.OrdRepo;
 import JuDBu.custommaster.repo.product.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrdService {
+public class OrdRequestService {
 
-    private final OrdRepository ordRepository;
+    private final OrdRepo ordRepo;
     private final ShopRepository shopRepository;
     private final ProductRepo productRepository;
     private final AuthenticationFacade authenticationFacade;
@@ -53,7 +56,7 @@ public class OrdService {
         log.info("requestOrder={}", requestOrder);
 
         // 주문 요청 저장
-        Ord savedOrder = ordRepository.save(requestOrder);
+        Ord savedOrder = ordRepo.save(requestOrder);
         log.info("savedOrder={}", savedOrder);
     }
 }
