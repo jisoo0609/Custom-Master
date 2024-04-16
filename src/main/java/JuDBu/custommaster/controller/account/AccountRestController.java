@@ -2,6 +2,7 @@ package JuDBu.custommaster.controller.account;
 
 import JuDBu.custommaster.dto.account.AccountDto;
 import JuDBu.custommaster.dto.account.CustomAccountDetails;
+import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.account.Authority;
 import JuDBu.custommaster.facade.AuthenticationFacade;
 import JuDBu.custommaster.jwt.dto.JwtResponseDto;
@@ -18,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AccountRestController {
     private final UserDetailsManager manager;
-    private final PasswordEncoder passwordEncoder;
     private final AccountService accountService;
-    private final AuthenticationFacade authFacade;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("business-register")
     public JwtResponseDto businessRegister(){
@@ -58,6 +58,27 @@ public class AccountRestController {
             Long id
     ){
         return accountService.readOne(id);
+    }
+
+    @PostMapping("update")
+    public String update(
+            @RequestParam("username")
+            String username,
+            @RequestParam("password-check")
+            String passwordCheck,
+            @RequestParam("name")
+            String name,
+            @RequestParam("email")
+            String email
+    ){
+        AccountDto dto = AccountDto.builder()
+                .username(username)
+                .password(passwordCheck)
+                .name(name)
+                .email(email)
+                .build();
+        accountService.updateAccount(dto);
+        return "register done";
     }
 
     @PostMapping("delete/{id}")
