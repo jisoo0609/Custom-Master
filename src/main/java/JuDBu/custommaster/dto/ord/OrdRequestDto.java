@@ -1,4 +1,4 @@
-package JuDBu.custommaster.entity.ord.request;
+package JuDBu.custommaster.dto.ord;
 
 import lombok.Getter;
 import lombok.Setter;

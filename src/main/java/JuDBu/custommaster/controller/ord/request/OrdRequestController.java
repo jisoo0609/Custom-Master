@@ -1,7 +1,7 @@
-package JuDBu.custommaster.entity.ord.request;
+package JuDBu.custommaster.controller.ord.request;
 
-import JuDBu.custommaster.entity.account.Account;
-import JuDBu.custommaster.facade.AuthenticationFacade;
+import JuDBu.custommaster.dto.ord.OrdRequestDto;
+import JuDBu.custommaster.service.ord.request.OrdRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -11,9 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class OrdController {
+public class OrdRequestController {
 
-    private final OrdService ordService;
+    private final OrdRequestService ordService;
 
     @GetMapping("/{shopId}/{productId}/request")
     public String requestForm(@ModelAttribute OrdRequestDto requestDto) {
