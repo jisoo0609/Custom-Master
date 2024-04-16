@@ -15,6 +15,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepo productRepository;
 
+    // 상품 임시 생성
     public ProductService(ProductRepo productRepository) {
         this.productRepository = productRepository;
         if (this.productRepository.count() == 0) {
