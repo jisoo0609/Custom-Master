@@ -1,6 +1,7 @@
 package JuDBu.custommaster.service.ord.owner;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
+import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.ord.Ord;
 import JuDBu.custommaster.entity.product.Product;
 import JuDBu.custommaster.entity.shop.Shop;
@@ -8,6 +9,8 @@ import JuDBu.custommaster.repo.ord.OrdRepo;
 import JuDBu.custommaster.repo.product.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,18 +27,15 @@ public class OrdAcceptService {
     private final ProductRepo productRepo;
 
     // Shop에 있는 주문 전체 불러오기
-    public List<OrdDto> readAllOrdByShop(Long shopId) {
+    public Page<OrdDto> readAllOrdByShop(Long shopId, Pageable pageable) {
         // 매장 주인인지 확인
 
         // 해당 매장의 주문 불러오기
-        List<Ord> ords = ordRepo.findByShop_Id(shopId)
+        Page<Ord> ords = ordRepo.findByShop_IdOrderByIdDesc(shopId, pageable)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info(ords.toString());
 
-        return ords.stream()
-                .map(OrdDto::fromEntity)
-                .sorted(Comparator.comparing(OrdDto::getOrdTime).reversed())
-                .collect(Collectors.toList());
+        return ords.map(OrdDto::fromEntity);
     }
 
     // 주문 리스트에서 Product name 불러오기
@@ -48,12 +48,22 @@ public class OrdAcceptService {
         log.info(ords.toString());
 
         return ords.stream()
-                .sorted(Comparator.comparing(Ord::getOrdTime).reversed())
                 .map(Ord::getProduct)
                 .map(Product::getName)
                 .collect(Collectors.toList());
     }
 
+    // 주문 리스트에서 주문자명 불러오기
+    public List<String> getAccountName(Long shopId) {
+        List<Ord> ordList = ordRepo.findByShop_Id(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return ordList.stream()
+                .map(Ord::getAccount)
+                .map(Account::getName)
+                .collect(Collectors.toList());
+
+    }
     // 주문 리스트에서 주문 상태 불러오기
     public List<Ord.Status> getOrdStatus(Long shopId) {
         List<Ord> ordStatus = ordRepo.findByShop_Id(shopId)
