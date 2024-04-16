@@ -19,7 +19,7 @@ public class Shop {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_shop_id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @Setter

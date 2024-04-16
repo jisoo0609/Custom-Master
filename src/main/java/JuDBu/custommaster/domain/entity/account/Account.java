@@ -31,7 +31,6 @@ public class Account {
             String name,
             String email 
     ){
-
         this.password = password;
         this.name = name;
         this.email = email;
