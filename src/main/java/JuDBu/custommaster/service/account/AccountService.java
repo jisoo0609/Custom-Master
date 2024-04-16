@@ -8,6 +8,7 @@ import JuDBu.custommaster.facade.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AccountService {
     private final AccountRepo accountRepo;
     private final AuthenticationFacade authFacade;
+    private final PasswordEncoder passwordEncoder;
 
     public AccountDto readOne(Long id){
         Account account = accountRepo.findById(id).orElseThrow(()->
@@ -59,12 +61,15 @@ public class AccountService {
     public AccountDto updateAccount(AccountDto dto) {
         Account target = authFacade.getAccount();
 
-        log.info("auth user: {}", authFacade.getAuth().getName());
-        log.info("page username: {}", target.getUsername());
-
-        // 토큰으로 접근 시도한 유저와, 페이지의 유저가 다른경우 예외
-        if (!authFacade.getAuth().getName().equals(target.getUsername())) {
+        // 토큰의 유저와 수정하는 유저가 똑같은 유저인지
+        if(!target.getUsername().equals(dto.getUsername())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(dto.getPassword(), target.getPassword())) {
+            log.error("비밀번호가 일치하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         target.updateInfo(dto.getPassword(), dto.getName(), dto.getEmail());
