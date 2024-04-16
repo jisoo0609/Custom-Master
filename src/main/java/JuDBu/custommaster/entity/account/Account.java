@@ -26,18 +26,33 @@ public class Account {
     private Authority authority;    // 권한
 
     public void updateInfo(
-                       String password,
-                       String name,
-                       String email
+
+            String password,
+            String name,
+            String email 
     ){
         this.password = password;
         this.name = name;
         this.email = email;
     }
+
     public void updateBusinessNumber(
-                           String businessNumber
-    ){
+            String businessNumber
+    ) {
 
         this.businessNumber = businessNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", businessNumber='" + businessNumber + '\'' +
+                ", authority=" + authority +
+                '}';
     }
 }

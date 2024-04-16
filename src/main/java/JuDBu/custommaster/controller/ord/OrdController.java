@@ -1,4 +1,4 @@
-package JuDBu.custommaster.controller;
+package JuDBu.custommaster.controller.ord;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.service.ord.OrdService;

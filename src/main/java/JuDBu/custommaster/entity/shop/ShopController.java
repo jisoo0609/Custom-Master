@@ -42,6 +42,7 @@ public class ShopController {
     public String readPage(Pageable pageable, Model model) {
         Page<ShopReadDto> shopReadPageDto = shopService.readPage(pageable);
         model.addAttribute("shopReadPageDto", shopReadPageDto);
+        // TODO 상점 리스트 페이지
         return "readPage";
     }
 
@@ -50,6 +51,7 @@ public class ShopController {
     public String readOne(@PathVariable("shopId") Long shopId, Model model) {
         ShopReadDto readDto = shopService.readOne(shopId);
         model.addAttribute("readDto", readDto);
+        // TODO 상점 상세 페이지
         return "shop";
     }
 

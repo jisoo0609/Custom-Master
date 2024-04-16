@@ -1,8 +1,8 @@
-package JuDBu.custommaster.controller.ord.owner;
+package JuDBu.custommaster.controller.ord.accept;
 
 import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.entity.ord.Ord;
-import JuDBu.custommaster.service.ord.owner.OrdAcceptService;
+import JuDBu.custommaster.service.ord.accept.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +17,12 @@ public class OrdAcceptRestController {
     private final OrdAcceptService ordAcceptService;
 
     // 주문 리스트 불러오기
-    @GetMapping("/read-all")
+/*    @GetMapping("/read-all")
     public List<OrdDto> ordList(
             @PathVariable("shopId") Long shopId
     ) {
         return ordAcceptService.readAllOrdByShop(shopId);
-    }
+    }*/
 
     // 주문 리스트에서 Product name 불러오기
     @GetMapping("/read-name")

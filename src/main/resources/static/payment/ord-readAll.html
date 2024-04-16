@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 주문 보기</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<h1>전체 주문</h1>
+<table id="orders-table">
+    <thead>
+    <tr>
+        <th>주문 ID</th>
+        <th>제품 ID</th>
+        <th>총 가격</th>
+        <th>상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 주문 행은 여기에 동적으로 추가됩니다 -->
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ordersTableBody = document.getElementById('orders-table').getElementsByTagName('tbody')[0];
+
+        fetch('/toss/ord-readAll', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(order => {
+                    const row = document.createElement('tr');
+
+                    const cellOrderId = document.createElement('td');
+                    cellOrderId.innerText = order.id;
+                    row.appendChild(cellOrderId);
+
+                    const cellProductId = document.createElement('td');
+                    cellProductId.innerText = order.productId;
+                    row.appendChild(cellProductId);
+
+                    const cellTotalPrice = document.createElement('td');
+                    cellTotalPrice.innerText = order.totalPrice;
+                    row.appendChild(cellTotalPrice);
+
+                    const cellStatus = document.createElement('td');
+                    cellStatus.innerText = order.status;
+                    row.appendChild(cellStatus);
+
+                    ordersTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('주문 정보를 가져오는 중 오류가 발생했습니다:', error);
+            });
+    });
+</script>
+</body>
+</html>

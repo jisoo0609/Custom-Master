@@ -1,13 +1,15 @@
 package JuDBu.custommaster.controller;
 
+import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.dto.payment.PaymentConfirmDto;
+import JuDBu.custommaster.entity.ord.Ord;
 import JuDBu.custommaster.service.ord.OrdService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -23,5 +25,32 @@ public class TossController {
     ) {
         log.info(dto.toString());
         return ordService.confirmPayment(dto);
+    }
+
+    // 임시 주문 생성
+    @PostMapping("/ord-create")
+    public Object ordCreate(
+            @RequestBody
+            OrdDto dto
+    ){
+        return ordService.ordCreate(dto);
+    }
+
+    // 주문 전체 읽기
+    @GetMapping("/ord-readAll")
+    public List<OrdDto> readAll(){
+        return ordService.readAll();
+    }
+
+    // 주문 상세 정보 조회
+    @GetMapping("/ord-detail/{ordId}")
+    public Object getOrdDetail(@PathVariable Long ordId) {
+        log.info("Fetching order details for ID: {}", ordId);
+        OrdDto ordDetail = ordService.readOne(ordId);
+        if (ordDetail == null) {
+            log.error("Order not found for ID: {}", ordId);
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ordDetail);
     }
 }

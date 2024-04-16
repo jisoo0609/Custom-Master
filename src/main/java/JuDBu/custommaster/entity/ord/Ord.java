@@ -57,7 +57,8 @@ public class Ord {
     public enum Status {
         OFFERED,
         DECLINED,
-        CONFIRMED
+        CONFIRMED,
+        PAID
     }
 
     public static Ord createOrd(Account account, Product product, String pickupDate, String exImagePath) {
