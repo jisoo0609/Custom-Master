@@ -1,5 +1,6 @@
 package JuDBu.custommaster.entity.shop;
 
+import JuDBu.custommaster.entity.account.Account;
 import JuDBu.custommaster.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,6 +19,10 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @Setter
     private String name;
 
@@ -29,8 +34,9 @@ public class Shop {
     @OneToMany(mappedBy = "shop")
     private List<Product> products = new ArrayList<>();
 
-    public static Shop createShop(String name, String address, String phoneNumber) {
+    public static Shop createShop(Account account, String name, String address, String phoneNumber) {
         return Shop.builder()
+                .account(account)
                 .name(name)
                 .address(address)
                 .phoneNumber(phoneNumber)
@@ -41,5 +47,15 @@ public class Shop {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Shop{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
     }
 }
