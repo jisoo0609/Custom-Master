@@ -27,4 +27,16 @@ public class Product {
     private String exImage;
     private Integer resultPrice;
     private Integer quantity;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", exPrice=" + exPrice +
+                ", exImage='" + exImage + '\'' +
+                ", resultPrice=" + resultPrice +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
