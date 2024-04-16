@@ -4,12 +4,18 @@ import JuDBu.custommaster.dto.ord.OrdDto;
 import JuDBu.custommaster.service.ord.owner.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -22,10 +28,22 @@ public class OrderAcceptController {
     @GetMapping("/read-all")
     public String ordList(
             @PathVariable("shopId") Long shopId,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable,
             Model model
     ) {
-        List<OrdDto> ords = ordAcceptService.readAllOrdByShop(shopId);
+        Page<OrdDto> ords = ordAcceptService.readAllOrdByShop(shopId, PageRequest.of(0, 10));
+        List<String> productNames = ordAcceptService.orderProductName(shopId);
+        List<String> accountNames = ordAcceptService.getAccountName(shopId);
+
+        log.info(productNames.toString());
+        log.info(accountNames.toString());
+
+        Collections.reverse(productNames);
+        Collections.reverse(accountNames);
         model.addAttribute("ords", ords);
+        model.addAttribute("names", productNames);
+        model.addAttribute("accounts", accountNames);
         return "ord/shop-order-list";
     }
 
