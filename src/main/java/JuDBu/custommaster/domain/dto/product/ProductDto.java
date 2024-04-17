@@ -13,7 +13,6 @@ public class ProductDto {
     private Long shopId;
     private String name;
     private Integer exPrice;
-    private Integer resultPrice;
     private Integer quantity;
     private Integer exImage;
 
@@ -23,7 +22,6 @@ public class ProductDto {
                 .shopId(product.getShop().getId())
                 .name(product.getName())
                 .exPrice(product.getExPrice())
-                .resultPrice(product.getResultPrice())
                 .quantity(product.getQuantity())
                 //.exImage(product.getExImage())
                 .build();

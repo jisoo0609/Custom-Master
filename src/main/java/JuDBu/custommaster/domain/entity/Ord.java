@@ -43,7 +43,7 @@ public class Ord {
     @Setter
     private Integer totalPrice;
     private String exImagePath;
-
+    private String requirements;
     private String tossPaymentKey;
     private String tossOrderId;
 

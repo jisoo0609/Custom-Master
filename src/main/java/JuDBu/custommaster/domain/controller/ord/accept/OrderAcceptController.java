@@ -1,18 +1,19 @@
 package JuDBu.custommaster.domain.controller.ord.accept;
 
+import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.ord.OrdDto;
+import JuDBu.custommaster.domain.dto.product.ProductDto;
 import JuDBu.custommaster.domain.service.ord.accept.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +54,33 @@ public class OrderAcceptController {
             Model model
     ) {
         OrdDto ord = ordAcceptService.readDetails(shopId, ordId);
+        ProductDto product = ordAcceptService.getProductName(shopId, ordId);
+        AccountDto account = ordAcceptService.getAccountName(shopId, ordId);
+
         model.addAttribute("ord", ord);
+        model.addAttribute("product", product);
+        model.addAttribute("account", account);
         return "ord/ord-detail";
+    }
+
+    // 주문 요청 승낙
+    @PostMapping("/accept/{ordId}")
+    public String accept(
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("ordId") Long ordId,
+            @RequestParam("price") String price
+    ) {
+        ordAcceptService.accept(shopId, ordId, price);
+        return "redirect:/order-accept/{shopId}/read/{ordId}";
+    }
+
+    // 주문 요청 거절
+    @PostMapping("/delete/{ordId}")
+    public String delete(
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("ordId") Long ordId
+    ) {
+        ordAcceptService.deleteOrd(shopId, ordId);
+        return "redirect:/order-accept/{shopId}/read-all";
     }
 }
