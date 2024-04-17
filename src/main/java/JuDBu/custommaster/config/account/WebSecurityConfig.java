@@ -1,9 +1,9 @@
 package JuDBu.custommaster.config.account;
 
-import JuDBu.custommaster.component.OAuth2SuccessHandler;
-import JuDBu.custommaster.jwt.JwtTokenFilter;
-import JuDBu.custommaster.jwt.JwtTokenUtils;
-import JuDBu.custommaster.service.account.OAuth2UserServiceImpl;
+import JuDBu.custommaster.auth.component.OAuth2SuccessHandler;
+import JuDBu.custommaster.auth.jwt.JwtTokenFilter;
+import JuDBu.custommaster.auth.jwt.JwtTokenUtils;
+import JuDBu.custommaster.domain.service.account.OAuth2UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
