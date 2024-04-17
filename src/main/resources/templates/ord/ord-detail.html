@@ -48,14 +48,14 @@
             <p style="margin-right: 10px;">주문 상태: [[${ord.status}]]</p>
             <div th:if="${ord.status.toString() == 'OFFERED'}" style="margin-left: 10px;">
                 <div>
-                    <form method="post" th:action="@{/api/order-accept/__${shopId}__/delete/{orderId}(orderId=${ord.id})}">
+                    <form id="reject" method="post" th:action="@{/order-accept/__${shopId}__/delete/{orderId}(orderId=${ord.id})}">
                         <button id="ord-delete">
                             <label>주문 거절</label>
                         </button>
                     </form>
                 </div>
                 <div>
-                    <form method="post" th:action="@{/api/order-accept/__${shopId}__/accept/{orderId}(orderId=${ord.id})}">
+                    <form id="accept" method="post" th:action="@{/order-accept/__${shopId}__/accept/{orderId}(orderId=${ord.id})}">
                         <input id="price" name="price" type="text" placeholder="확정 금액을 입력하세요.">
                         <button id="ord-submit">
                             <label for="price">submit</label>
@@ -64,6 +64,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:if="${ord.status.toString() == 'CONFIRMED'}">
+        <p>확정 금액: [[${ord.totalPrice}]]</p>
     </div>
     <hr>
     <div>
@@ -81,5 +84,14 @@
     </div>
     <hr>
     <a th:href="@{/order-accept/__${shopId}__/read-all}" style="padding: 5px 10px; background-color: skyblue; color: white; text-decoration: none; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">Back</a>
+    <script>
+        document.getElementById('ord-submit').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('주문이 확정되었습니다.');
+        });
+        document.getElementById('ord-delete').addEventListener('click', function() {
+            alert('주문이 거절되었습니다.');
+        });
+    </script>
 </body>
 </html>
