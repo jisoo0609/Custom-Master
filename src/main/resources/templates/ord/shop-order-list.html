@@ -15,7 +15,7 @@
 
     .page-link {
         padding: 5px 10px;
-        background-color: #f4f4f4;
+        background-color: skyblue;
         border: 1px solid #ccc;
         text-decoration: none;
         color: #333;
@@ -27,13 +27,7 @@
     </style>
 </head>
 <body>
-
     <h2>주문 목록</h2>
-    <!-- 주문이 없는 경우 -->
-    <div th:if="${ords.isEmpty()}">
-        <p>요청된 주문이 없습니다.</p>
-    </div>
-
     <div style="display: flex; align-items: center; font-weight: bold;">
         <p style="width: 100px; margin: 0;">ID</p>
         <span style="margin-right: 10px;"></span>
@@ -45,6 +39,12 @@
         <span style="margin-right: 10px;"></span>
         <p style="width: 100px; margin: 0;">상태</p>
     </div>
+
+    <!-- 주문이 없는 경우 -->
+    <div th:if="${ords.isEmpty()}">
+        <p>요청된 주문이 없습니다.</p>
+    </div>
+
     <!-- 주문이 있는 경우 -->
     <div id="order-list" th:unless="${ords.isEmpty()}" th:each="ord, idx : ${ords}" th:reverse="true" style="margin-bottom: 10px;">
         <hr>

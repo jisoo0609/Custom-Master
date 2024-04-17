@@ -14,9 +14,11 @@ public class OrdDto {
     private Long id;
     private Long accountId;
     private Long productId;
+    private Long shopId;
     private LocalDateTime pickUpDate;
     private LocalDateTime ordTime;
     private Integer totalPrice;
+    private String exImagePath;
     private Ord.Status status;
 
     public static OrdDto fromEntity(Ord ord) {
@@ -24,9 +26,11 @@ public class OrdDto {
                 .id(ord.getId())
                 .accountId(ord.getAccount().getId())
                 .productId(ord.getProduct().getId())
+                .shopId(ord.getShop().getId())
                 .pickUpDate(ord.getPickUpDate())
                 .ordTime(ord.getOrdTime())
                 .totalPrice(ord.getTotalPrice())
+                .exImagePath(ord.getExImagePath())
                 .status(ord.getStatus())
                 .build();
     }
