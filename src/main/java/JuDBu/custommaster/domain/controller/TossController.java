@@ -2,6 +2,9 @@ package JuDBu.custommaster.domain.controller;
 
 import JuDBu.custommaster.domain.dto.ord.OrdDto;
 import JuDBu.custommaster.domain.dto.payment.PaymentConfirmDto;
+import JuDBu.custommaster.domain.dto.product.ProductDto;
+import JuDBu.custommaster.domain.entity.Product;
+import JuDBu.custommaster.domain.service.ProductService;
 import JuDBu.custommaster.domain.service.ord.OrdService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TossController {
     private final OrdService ordService;
+    private final ProductService productService;
     // object 는 임시
     @PostMapping("/confirm-payment")
     public Object confirmPayment(
@@ -35,13 +39,13 @@ public class TossController {
         return ordService.ordCreate(dto);
     }
 
-    // 주문 전체 읽기
+    // 임시 주문 전체 읽기
     @GetMapping("/ord-readAll")
     public List<OrdDto> readAll(){
         return ordService.readAll();
     }
 
-    // 주문 상세 정보 조회
+    // 임시 주문 상세 정보 조회
     @GetMapping("/ord-detail/{ordId}")
     public Object getOrdDetail(@PathVariable Long ordId) {
         log.info("Fetching order details for ID: {}", ordId);
@@ -51,5 +55,16 @@ public class TossController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ordDetail);
+    }
+
+    // 임시 주문 상품 정보 조회
+    @GetMapping("/product-detail/{productId}")
+    public ResponseEntity<?> getProductDetail(@PathVariable Long productId) {
+        ProductDto product = productService.readOne(productId);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
