@@ -1,15 +1,20 @@
 package JuDBu.custommaster.domain.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/testController")
+@Controller
+@RequestMapping("/test")
+@Slf4j
 public class ReviewController {
 
-    @PostMapping("/test")
+    @GetMapping("/test")
     public String Create(){
-
-        return "reviewTest 중입니다.";
+        log.info("done");
+        return "review/reviewTest";
     }
 
 }
