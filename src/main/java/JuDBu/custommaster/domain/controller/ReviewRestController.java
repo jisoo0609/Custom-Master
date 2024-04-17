@@ -21,9 +21,10 @@ public class ReviewRestController {
     public ReviewDto createReview(
             @RequestParam("comment") String comment,
             @RequestParam("orderId") Long orderId,
+            @RequestParam("shopId") Long shopId,
             @RequestParam("images") MultipartFile[] images
     ) {
-        return reviewService.createReview(comment, orderId, images);
+        return reviewService.createReview(comment, shopId, orderId, images);
     }
 
     @GetMapping

@@ -112,6 +112,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.warn("jwt validation failed");
             }
         }
+        else {
+            log.info("there is no token");
+        }
         // 다음 필터 호출
         filterChain.doFilter(request, response);
     }

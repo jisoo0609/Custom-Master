@@ -1,8 +1,10 @@
 package JuDBu.custommaster.domain.service.account;
 
+import JuDBu.custommaster.domain.entity.Shop;
 import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.entity.account.Authority;
 import JuDBu.custommaster.domain.dto.account.CustomAccountDetails;
+import JuDBu.custommaster.domain.repo.ShopRepository;
 import JuDBu.custommaster.domain.repo.account.AccountRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,13 @@ import java.util.Optional;
 @Service
 public class JpaUserDetailsManger implements UserDetailsManager {
     private final AccountRepo accountRepo;
+    private final ShopRepository shopRepo;
 
-    public JpaUserDetailsManger(AccountRepo accountRepo, PasswordEncoder passwordEncoder) {
+    public JpaUserDetailsManger(AccountRepo accountRepo,
+                                ShopRepository shopRepo,
+                                PasswordEncoder passwordEncoder) {
         this.accountRepo = accountRepo;
+        this.shopRepo = shopRepo;
         if (!userExists("admin")) {
             createUser(CustomAccountDetails.builder()
                     .username("admin")
@@ -30,6 +36,24 @@ public class JpaUserDetailsManger implements UserDetailsManager {
                     .email("admin")
                     .authority(Authority.ROLE_ADMIN)
                     .build());
+            createUser((CustomAccountDetails.builder())
+                    .username("ydh511")
+                    .password(passwordEncoder.encode("password"))
+                    .name("yang")
+                    .email("ydh")
+                    .authority(Authority.ROLE_BUSINESS_USER)
+                    .build());
+        }
+        Optional<Account> optionalAccount = accountRepo.findById(2L);
+        if(optionalAccount.isPresent()){
+            if(shopRepo.count() == 0){
+                shopRepo.save(Shop.builder()
+                        .account(optionalAccount.get())
+                        .address("seoul")
+                        .name("test shop")
+                        .phoneNumber("010-xxxx-xxxx")
+                        .build());
+            }
         }
     }
 
