@@ -51,19 +51,18 @@ public class OrdAcceptRestController {
         return ordAcceptService.readDetails(shopId, ordId);
     }
 
-
     // 주문 요청 승낙
     @PostMapping("/accept/{ordId}")
     public OrdDto accept(
             @PathVariable("shopId") Long shopId,
             @PathVariable("ordId") Long ordId,
-            @RequestParam("price") Integer price
+            @RequestParam("price") String price
     ) {
         return ordAcceptService.accept(shopId, ordId, price);
     }
 
     // 주문 요청 거절
-    @DeleteMapping("/delete/{ordId}")
+    @PostMapping("/delete/{ordId}")
     public void delete(
             @PathVariable("shopId") Long shopId,
             @PathVariable("ordId") Long ordId

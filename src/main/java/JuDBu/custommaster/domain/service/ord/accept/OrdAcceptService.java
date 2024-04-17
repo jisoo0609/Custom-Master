@@ -122,7 +122,7 @@ public class OrdAcceptService {
     }
 
     // 주문 승락
-    public OrdDto accept(Long shopId, Long ordId, Integer totalPrice) {
+    public OrdDto accept(Long shopId, Long ordId, String totalPrice) {
 /*        // 접근자 확인
         Account account = authFacade.getAccount();
         log.info("auth: {}", authFacade.getAuth().getName());
@@ -144,13 +144,13 @@ public class OrdAcceptService {
         }
 
         target.setStatus(Ord.Status.CONFIRMED);
-        if (totalPrice < target.getProduct().getExPrice()) {
+        if (Integer.parseInt(totalPrice) < target.getProduct().getExPrice()) {
             log.error("요청 메뉴 가격보다 작은 가격을 설정할 수 없습니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         target.setStatus(Ord.Status.CONFIRMED);
-        target.setTotalPrice(totalPrice);
+        target.setTotalPrice(Integer.parseInt(totalPrice));
         ordRepo.save(target);
 
         return OrdDto.fromEntity(target);
