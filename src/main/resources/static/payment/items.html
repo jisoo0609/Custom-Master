@@ -8,7 +8,7 @@
 <h1>판매중</h1>
 <hr>
 <div id="product-list"></div>
-
+<a href="/payment/ord-readAll.html">주문 전체 목록</a>
 <script>
     const productListDiv = document.getElementById('product-list');
 
@@ -68,7 +68,9 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Order created:', data);
-                window.location.href = `/toss/ord-readAll`; // Assuming the response has `ordId`
+                location.pathname = '/payment/ord-readAll.html'
+
+                // window.location.href = `/payment/ord-readAll`; // Assuming the response has `ordId`
             })
             .catch(error => console.error('Error creating order:', error));
     };
