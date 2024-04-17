@@ -1,7 +1,9 @@
 package JuDBu.custommaster.domain.service.ord.accept;
 
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
+import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.ord.OrdDto;
+import JuDBu.custommaster.domain.dto.product.ProductDto;
 import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Product;
@@ -102,6 +104,21 @@ public class OrdAcceptService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return OrdDto.fromEntity(ord);
+    }
+
+    // 특정 주문에 대한 Product Name 불러오기
+    public ProductDto getProductName(Long shopId, Long ordId) {
+        Ord ord = ordRepo.findByShop_IdAndId(shopId, ordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return ProductDto.fromEntity(ord.getProduct());
+    }
+
+    // 특정 주문에 대한 Account Name 불러오기
+    public AccountDto getAccountName(Long shopId, Long ordId) {
+        Ord ord = ordRepo.findByShop_IdAndId(shopId, ordId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return AccountDto.fromEntity(ord.getAccount());
     }
 
     // 주문 승락

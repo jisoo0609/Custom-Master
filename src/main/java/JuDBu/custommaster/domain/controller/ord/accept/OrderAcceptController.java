@@ -1,6 +1,8 @@
 package JuDBu.custommaster.domain.controller.ord.accept;
 
+import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.ord.OrdDto;
+import JuDBu.custommaster.domain.dto.product.ProductDto;
 import JuDBu.custommaster.domain.service.ord.accept.OrdAcceptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +56,12 @@ public class OrderAcceptController {
             Model model
     ) {
         OrdDto ord = ordAcceptService.readDetails(shopId, ordId);
+        ProductDto product = ordAcceptService.getProductName(shopId, ordId);
+        AccountDto account = ordAcceptService.getAccountName(shopId, ordId);
+
         model.addAttribute("ord", ord);
+        model.addAttribute("product", product);
+        model.addAttribute("account", account);
         return "ord/ord-detail";
     }
 }

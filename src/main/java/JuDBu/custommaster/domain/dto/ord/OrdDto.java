@@ -19,6 +19,9 @@ public class OrdDto {
     private LocalDateTime ordTime;
     private Integer totalPrice;
     private String exImagePath;
+    private String requirements;
+    private String tossPaymentKey;
+    private String tossOrderId;
     private Ord.Status status;
 
     public static OrdDto fromEntity(Ord ord) {
@@ -31,6 +34,7 @@ public class OrdDto {
                 .ordTime(ord.getOrdTime())
                 .totalPrice(ord.getTotalPrice())
                 .exImagePath(ord.getExImagePath())
+                .requirements(ord.getRequirements())
                 .status(ord.getStatus())
                 .build();
     }
