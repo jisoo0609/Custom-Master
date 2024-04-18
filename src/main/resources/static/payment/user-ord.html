@@ -39,9 +39,12 @@
                 document.getElementById('product-id').innerText = orderDetails.productId;
                 document.getElementById('ord-totalPrice').innerText = orderDetails.totalPrice;
 
-
-                document.getElementById('pay-link').href = `/payment/item.html?ordId=${ordId}&productId=${orderDetails.productId}`;
-
+                // ord의 status가 PAID라면 결제하기 링크를 안보이도록 설정
+                if (orderDetails.status === 'PAID') {
+                    document.getElementById('pay-link').style.display = 'none';
+                } else {
+                    document.getElementById('pay-link').href = `/payment/item.html?ordId=${ordId}&productId=${orderDetails.productId}`;
+                }
 
                 // 상품 정보를 가져오기 위한 리퀘스트
                 return axios.get(`/toss/product-detail/${orderDetails.productId}`);
