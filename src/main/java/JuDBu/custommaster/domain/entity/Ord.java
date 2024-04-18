@@ -39,12 +39,15 @@ public class Ord {
     private LocalDateTime pickUpDate;
 
     @CreatedDate
+    @Setter
     private LocalDateTime ordTime;
     @Setter
     private Integer totalPrice;
     private String exImagePath;
     private String requirements;
+    @Setter
     private String tossPaymentKey;
+    @Setter
     private String tossOrderId;
 
     @Setter

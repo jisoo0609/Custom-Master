@@ -20,14 +20,17 @@ import java.util.List;
 public class TossController {
     private final OrdService ordService;
     private final ProductService productService;
+
     // object 는 임시
-    @PostMapping("/confirm-payment")
+    @PostMapping("/confirm-payment/{ordId}")
     public Object confirmPayment(
             @RequestBody
-            PaymentConfirmDto dto
+            PaymentConfirmDto dto,
+            @PathVariable
+            Long ordId
     ) {
         log.info(dto.toString());
-        return ordService.confirmPayment(dto);
+        return ordService.confirmPayment(dto,ordId);
     }
 
     // 임시 주문 생성

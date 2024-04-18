@@ -39,16 +39,17 @@
                 document.getElementById('product-id').innerText = orderDetails.productId;
                 document.getElementById('ord-totalPrice').innerText = orderDetails.totalPrice;
 
-                // Set href for payment link
-                document.getElementById('pay-link').href = `/payment/item.html?orderId=${ordId}&productId=${orderDetails.productId}`;
 
-                // Additional request to get product details
+                document.getElementById('pay-link').href = `/payment/item.html?ordId=${ordId}&productId=${orderDetails.productId}`;
+
+
+                // 상품 정보를 가져오기 위한 리퀘스트
                 return axios.get(`/toss/product-detail/${orderDetails.productId}`);
             })
             .then(productResponse => {
                 const productDetails = productResponse.data;
                 document.getElementById('product-name').innerText = productDetails.name;
-                // Optionally update image src if available
+                // 이미지가 있다면 추가할 코드
                 // if (productDetails.imageUrl) {
                 //     document.getElementById('item-image').src = productDetails.imageUrl;
                 // }
