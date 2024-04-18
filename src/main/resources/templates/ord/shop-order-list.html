@@ -43,6 +43,7 @@
     <!-- 주문이 없는 경우 -->
     <div th:if="${ords.isEmpty()}">
         <p>요청된 주문이 없습니다.</p>
+        <hr>
     </div>
 
     <!-- 주문이 있는 경우 -->
@@ -73,6 +74,10 @@
             <div class="page-item">
                 <a class="page-link" th:href="@{/order-accept/__${shopId}__/read-all(page=${iterStat.index}, size=${ords.size})}" th:text="${iterStat.index + 1}"></a>
             </div>
+        </div>
+
+        <div th:if="${ords.isEmpty()}">
+            <a th:href="@{/order-accept/__${shopId}__/read-all}" style="padding: 5px 10px; background-color: skyblue; color: white; text-decoration: none; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">Back</a>
         </div>
 
         <!-- 다음 페이지 버튼 -->
