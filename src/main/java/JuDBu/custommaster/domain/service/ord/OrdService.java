@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,7 +27,7 @@ public class OrdService {
     private final OrdRepo ordRepository;
 
     // todo 수정 중 : ord 찾아서 결제 정보 update 하기
-    public String /*Object*/ confirmPayment(PaymentConfirmDto dto) {
+    public Object confirmPayment(PaymentConfirmDto dto, Long ordId) {
         // HTTP 요청 보내진다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
         log.info(tossPaymentObj.toString());
@@ -34,22 +35,27 @@ public class OrdService {
         String orderName = ((LinkedHashMap<String, Object>) tossPaymentObj)
                 .get("orderName").toString();
 
-        // 2. orderName에서 productId 회수하고, 그에 해당하는 item 엔티티를 조회
-        Long productId = Long.parseLong(orderName.split("-")[0]);
-        Product product  = productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        // 2. ordId로 주문 찾기
+        Optional<Ord> optionalOrd = ordRepository.findById(ordId);
+        if (!optionalOrd.isPresent()) {
+            // 주문을 찾을 수 없는 경우, 적절한 예외 처리 필요
+            throw new RuntimeException("Order not found with id: " + ordId);
+        }
+        Ord ord = optionalOrd.get();
 
+        // tpss order id, toss payment key
+        String tossOrderId = dto.getOrderId();  // 클라이언트로부터 받은 주문 ID
+        String paymentKey = dto.getPaymentKey();  // 클라이언트로부터 받은 결제 키
         LocalDateTime now = LocalDateTime.now();
-        // todo ord 업데이트
-        /*return OrdDto.fromEntity(ordRepository.save(Ord.builder()
-                .product(product)
-                .ordTime(now)
-                .tossPaymentKey(dto.getPaymentKey())
-                .tossOrderId(dto.getOrderId())
-                .totalPrice(dto.getAmount())
-                .status(Ord.Status.CONFIRMED)
-                .build()));*/
-        return "수정 중";
+
+        // ord 업데이트
+        ord.setOrdTime(now);
+        ord.setTossPaymentKey(paymentKey);
+        ord.setTossOrderId(tossOrderId);
+        ord.setTotalPrice(dto.getAmount());
+        ord.setStatus(Ord.Status.PAID); // 상태를 PAID로 변경
+
+        return OrdDto.fromEntity(ordRepository.save(ord)); // 주문 정보 저장
     }
 
     public OrdDto ordCreate(OrdDto dto) {
