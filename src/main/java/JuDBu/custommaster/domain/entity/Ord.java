@@ -36,11 +36,13 @@ public class Ord {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    private Integer phoneNumber;
     private LocalDateTime pickUpDate;
 
     @CreatedDate
     @Setter
     private LocalDateTime ordTime;
+
     @Setter
     private Integer totalPrice;
     private String exImagePath;
@@ -62,11 +64,15 @@ public class Ord {
         PAID
     }
 
-    public static Ord createOrd(Account account, Product product, String pickupDate, String exImagePath) {
+    public static Ord createOrd(Account account, Shop shop, Product product, Integer phoneNumber, LocalDateTime pickupDate, String requirements, String exImagePath) {
         return Ord.builder()
-                //.account(account)
-                //.product(product)
-                .pickUpDate(LocalDateTime.parse(pickupDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .account(account)
+                .shop(shop)
+                .product(product)
+                .phoneNumber(phoneNumber)
+                //.pickUpDate(LocalDateTime.parse(pickupDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")))
+                .pickUpDate(pickupDate)
+                .requirements(requirements)
                 .exImagePath(exImagePath)
                 .status(Ord.Status.OFFERED)
                 .build();
@@ -78,7 +84,9 @@ public class Ord {
                 "id=" + id +
                 ", pickUpDate=" + pickUpDate +
                 ", ordTime=" + ordTime +
+                ", totalPrice=" + totalPrice +
                 ", exImagePath='" + exImagePath + '\'' +
+                ", requirements='" + requirements + '\'' +
                 ", status=" + status +
                 '}';
     }

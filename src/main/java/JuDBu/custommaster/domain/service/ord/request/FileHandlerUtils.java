@@ -1,4 +1,4 @@
-package JuDBu.custommaster.domain.controller.ord.request;
+package JuDBu.custommaster.domain.service.ord.request;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

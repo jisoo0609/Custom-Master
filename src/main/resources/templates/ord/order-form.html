@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,25 +73,29 @@
 <body>
 <div class="container">
   <h1 class="title">주문하기</h1>
-  <form action="/submit-order" method="POST" enctype="multipart/form-data">
+  <form action="#" th:action method="POST" enctype="multipart/form-data" th:object="${requestDto}">
     <div>
       <label for="name">이름:</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text" id="name" th:field="*{name}" required>
+      <span th:errors="*{name}">이름은 필수입니다.</span>
     </div>
 
     <div>
       <label for="phoneNumber">전화번호:</label>
-      <input type="tel" id="phoneNumber" name="phoneNumber" required>
+      <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" required>
+      <span th:errors="*{phoneNumber}">전화번호는 필수입니다.</span>
     </div>
 
     <div>
       <label for="pickupDateTime">픽업 날짜와 시간:</label>
-      <input type="datetime-local" id="pickupDateTime" name="pickupDateTime" required>
+      <input type="datetime-local" id="pickupDateTime" name="pickupDateTime" th:field="*{pickupDate}" required>
+      <span th:errors="*{pickupDate}">픽업 날짜는 필수입니다.</span>
     </div>
 
     <div>
       <label for="requirements">요구 사항:</label>
-      <textarea id="requirements" name="requirements" rows="4" cols="50"></textarea>
+      <textarea id="requirements" name="requirements" rows="4" cols="50" th:field="*{requirements}"></textarea>
+      <span th:errors="*{requirements}">요구사항은 필수입니다.</span>
     </div>
 
     <div>
