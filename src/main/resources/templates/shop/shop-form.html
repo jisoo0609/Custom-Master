@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>주문하기</title>
+  <title>상점 개설하기</title>
   <style>
       /* body 요소에 대한 스타일링 */
       body {
@@ -79,8 +79,8 @@
 </head>
 <body>
 <div class="centered-content">
-  <h1 class="title">주문하기</h1>
-  <form action="#" th:action method="POST" enctype="multipart/form-data" th:object="${requestDto}">
+  <h1 class="title">상점 개설하기</h1>
+  <form action="#" th:action method="POST" enctype="multipart/form-data" th:object="${createDto}">
 
     <div>
       <label for="name">이름:</label>
@@ -89,29 +89,18 @@
     </div>
 
     <div>
+      <label for="address">주소:</label>
+      <input type="text" id="address" th:field="*{address}" required th:errorclass="errorInput">
+      <span th:errors="*{address}" class="errorMessage">주소는 필수입니다.</span>
+    </div>
+
+    <div>
       <label for="phoneNumber">전화번호:</label>
       <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" required th:errorclass="errorInput">
       <span th:errors="*{phoneNumber}" class="errorMessage">전화번호는 필수입니다.</span>
     </div>
 
-    <div>
-      <label for="pickupDate">픽업 날짜와 시간:</label>
-      <input type="datetime-local" id="pickupDate" th:field="*{pickupDate}" required th:errorclass="errorInput">
-      <span th:errors="*{pickupDate}" class="errorMessage">픽업 날짜는 필수입니다.</span>
-    </div>
-
-    <div>
-      <label for="requirements">요구 사항:</label>
-      <textarea id="requirements" th:field="*{requirements}" th:errorclass="errorInput"></textarea>
-      <span th:errors="*{requirements}" class="errorMessage">요구사항은 필수입니다.</span>
-    </div>
-
-    <div>
-      <label for="exImage">예시 이미지:</label>
-      <input type="file" id="exImage" name="exImage" accept="image/*" required>
-    </div>
-
-    <input type="submit" value="주문하기">
+    <input type="submit" value="개설하기">
   </form>
 </div>
 </body>

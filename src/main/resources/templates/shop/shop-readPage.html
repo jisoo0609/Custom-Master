@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상점 리스트</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          background-color: #f9f9f9;
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          width: 80%;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #fff;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: left;
+      }
+      th {
+          background-color: #f2f2f2;
+      }
+      tbody tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+      .pagination {
+          list-style-type: none;
+          padding: 0;
+          margin: 20px 0;
+          text-align: center;
+      }
+      .pagination li {
+          display: inline-block;
+          margin-right: 5px;
+      }
+      .pagination li a {
+          display: block;
+          padding: 8px 12px;
+          text-decoration: none;
+          background-color: #4caf50;
+          color: #fff;
+          border-radius: 5px;
+      }
+      .pagination li.active a {
+          background-color: #45a049;
+      }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>상점 리스트</h1>
+
+  <table>
+
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>이름</th>
+      <th>주소</th>
+      <th>전화번호</th>
+      <th>제품 수</th>
+      <th>상세 정보</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="shop : ${shopReadPageDto.content}">
+      <td th:text="${shop.id}">1</td>
+      <td th:text="${shop.name}">상점 이름</td>
+      <td th:text="${shop.address}">상점 주소</td>
+      <td th:text="${shop.phoneNumber}">전화번호</td>
+      <td th:text="${#lists.size(shop.productReadDtos)}">0</td>
+      <td>
+        <a th:href="@{'/shop/' + ${shop.id}}">상세 보기</a>
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+
+  <div th:if="${shopReadPageDto.totalPages > 1}">
+    <ul class="pagination">
+      <li th:each="pageNumber : ${#numbers.sequence(0, shopReadPageDto.totalPages - 1)}" th:class="${pageNumber == shopReadPageDto.number ? 'active' : ''}">
+        <a th:href="@{'?page=' + ${pageNumber}}">[[${pageNumber + 1}]]</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

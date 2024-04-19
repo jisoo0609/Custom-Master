@@ -8,14 +8,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 // 상점 개설
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("shop")
 @RequiredArgsConstructor
 public class ShopController {
@@ -24,17 +26,24 @@ public class ShopController {
 
     // 상점에 대한 정보 입력 폼
     @GetMapping("create")
-    public String createForm(@ModelAttribute ShopCreateDto createDto) {
-        return "shop-create-form";
+    public String createForm(@ModelAttribute("createDto") ShopCreateDto createDto) {
+        return "shop/shop-form";
     }
 
     // 상점에 대한 정보 입력
     @PostMapping("create")
     public String create(
+            @Validated
             @ModelAttribute ShopCreateDto createDto,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("hasErrors={}", bindingResult.hasErrors());
+            return "shop/shop-form";
+        }
+
         log.info("shopCreateDto = {}", createDto);
         Long shopId = shopService.createShop(createDto);
         redirectAttributes.addAttribute("shopId", shopId);
@@ -47,7 +56,7 @@ public class ShopController {
         Page<ShopReadDto> shopReadPageDto = shopService.readPage(pageable);
         model.addAttribute("shopReadPageDto", shopReadPageDto);
         // TODO 상점 리스트 페이지
-        return "readPage";
+        return "shop/shop-readPage";
     }
 
     // 상점 상세 조회
@@ -56,7 +65,7 @@ public class ShopController {
         ShopReadDto readDto = shopService.readOne(shopId);
         model.addAttribute("readDto", readDto);
         // TODO 상점 상세 페이지
-        return "shop";
+        return "shop/shop";
     }
 
     // 상점 수정 입력 폼
