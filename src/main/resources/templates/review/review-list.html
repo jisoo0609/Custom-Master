@@ -28,8 +28,12 @@
 </head>
 <body>
     <h2>리뷰 목록</h2>
+    <button>
+        <a th:href="@{/review/__${shopId}__/create}">리뷰 작성하기</a>
+    </button>
     <!-- 리뷰가 없는 경우 -->
     <div th:if="${reviews.isEmpty()}">
+        <hr>
         <p>작성된 리뷰가 없습니다.</p>
     </div>
 
