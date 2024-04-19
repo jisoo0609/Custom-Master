@@ -41,9 +41,9 @@ public class OrdRequestService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("product={}", product);
 
-        // 사용자 조회
-        Account account = authenticationFacade.getAccount();
-        log.info("account={}", account);
+        // TODO: 사용자 조회
+        //Account account = authenticationFacade.getAccount();
+        //log.info("account={}", account);
 
         // 예시 이미지 저장
         String exImagePath = fileHandlerUtils.saveFile(
@@ -54,7 +54,8 @@ public class OrdRequestService {
         log.info("exImagePath={}", exImagePath);
 
         // 주문 요청 생성
-        Ord requestOrder = Ord.createOrd(account, shop, product, requestDto.getPhoneNumber(), requestDto.getPickupDate(), requestDto.getRequirements(), exImagePath);
+        // TODO: account
+        Ord requestOrder = Ord.createOrd(null, shop, product, requestDto.getPhoneNumber(), requestDto.getPickupDate(), requestDto.getRequirements(), exImagePath);
         log.info("requestOrder={}", requestOrder);
 
         // 주문 요청 저장

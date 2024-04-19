@@ -40,17 +40,21 @@ public class ShopService {
 
         // 인증된 Account가 BusinessAccount 인지
         Account account = authenticationFacade.getAccount();
+        log.info("account={}", account);
         if (!account.getAuthority().equals(Authority.ROLE_BUSINESS_USER)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         // 인증된 Account의 상점이 없는지
         if (shopRepository.findByAccount(account) != null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         Shop shop = Shop.createShop(account, createDto.getName(), createDto.getAddress(), createDto.getPhoneNumber());
+        log.info("createShop={}", shop);
+
         Shop savedShop = shopRepository.save(shop);
+        log.info("savedShop={}", savedShop);
         return savedShop.getId();
     }
 
