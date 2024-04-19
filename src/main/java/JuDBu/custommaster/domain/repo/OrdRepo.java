@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrdRepo extends JpaRepository<Ord, Long> {
-    Optional<List<Ord>> findByProductShop_Id(Long ShopId);
     Optional<List<Ord>> findByShop_Id(Long shopId);
     Optional<Page<Ord>> findByShop_IdOrderByIdDesc(Long shopId, Pageable pageable);
     // Ord의 ShopId로 해당하는 주문 불러오기
     Optional<Ord> findByShop_IdAndId(Long shopId, Long ordId);
+    boolean findByShop_IdAndAccount_Id(Long shopId, Long accountId);
 }

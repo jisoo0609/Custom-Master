@@ -21,12 +21,12 @@ public class Review {
     private Long id;
 
     @Setter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
     @Setter
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
@@ -36,8 +36,6 @@ public class Review {
     @Setter
     private Long orderId;
 
-
-    @Setter
     @ElementCollection
     private final List<String> images = new ArrayList<>();
 }

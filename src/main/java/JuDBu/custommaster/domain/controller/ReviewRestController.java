@@ -17,14 +17,12 @@ public class ReviewRestController {
     private final ReviewService reviewService;
 
     // 댓글 등록
-    @PostMapping
+    @PostMapping("/{shopId}/create")
     public ReviewDto createReview(
-            @RequestParam("comment") String comment,
-            @RequestParam("orderId") Long orderId,
-            @RequestParam("shopId") Long shopId,
-            @RequestParam("images") MultipartFile[] images
+            @PathVariable("shopId") Long shopId,
+            @RequestParam("comment") String comment
     ) {
-        return reviewService.createReview(comment, shopId, orderId, images);
+        return reviewService.createReview(shopId, comment);
     }
 
     @GetMapping
@@ -64,23 +62,6 @@ public class ReviewRestController {
     ) {
         reviewService.deleteReview(reviewId);
     }
-
-//    // 좋아요 처리
-//    @PostMapping("{articleId}/like")
-//    public void toggleArticleLike(
-//            @PathVariable("articleId")
-//            Long articleId
-//    ) {
-//        articleService.toggleArticleLike(articleId);
-//    }
-//
-//    @GetMapping("{articleId}/like")
-//    public Boolean isCurrentMemberLikedArticle(
-//            @PathVariable("articleId")
-//            Long articleId
-//    ) {
-//        return articleService.isCurrentMemberLikedArticle(articleId);
-//    }
 }
 
 

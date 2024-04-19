@@ -1,10 +1,12 @@
 package JuDBu.custommaster.domain.service;
 
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
+import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Review;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
 import JuDBu.custommaster.domain.entity.Shop;
 import JuDBu.custommaster.domain.entity.account.Account;
+import JuDBu.custommaster.domain.repo.OrdRepo;
 import JuDBu.custommaster.domain.repo.ReviewRepository;
 import JuDBu.custommaster.domain.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,35 +31,30 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final AuthenticationFacade authFacade;
     private final ShopRepository shopRepo;
+    private final OrdRepo ordRepo;
 
     // 리뷰 저장(작성) 메서드
     public ReviewDto createReview(
-            String comment,
-            Long orderId,
             Long shopId,
-            MultipartFile[] images
+            String comment
     ) {
-        // TODO : 회원정보 가져와야 리뷰작성 가능
         Account account = authFacade.getAccount();
+        log.info("auth account: {}", account.getUsername());
+
+/*        // 리뷰를 작성하려는 고객이 해당 매장에서 구매 기록이 없는 경우
+        if (!ordRepo.findByShop_IdAndAccount_Id(shopId, account.getId())) {
+            log.info("매장 구매 고객이 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }*/
 
         Shop shop = shopRepo.findById(shopId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Review review = Review.builder()
-                .comment(comment)
                 .account(account)
                 .shop(shop)
-                .orderId(orderId)
+                .comment(comment)
                 .build();
-
-        if (images != null){
-            // 리뷰 작성시 사진(이미지) 첨부
-            for (MultipartFile image : images) {
-                String imagePath = saveImage(image);
-                imagePath = imagePath.replaceAll("\\\\", "/");
-                review.getImages().add(imagePath);
-            }
-        }
 
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
