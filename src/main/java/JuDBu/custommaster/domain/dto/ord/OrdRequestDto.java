@@ -34,35 +34,4 @@ public class OrdRequestDto {
                 '}';
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public LocalDateTime getPickupDate() {
-        return pickupDate;
-    }
-
-    public void setPickupDate(LocalDateTime pickupDate) {
-        this.pickupDate = pickupDate;
-    }
-
-    public String getRequirements() {
-        return Requirements;
-    }
-
-    public void setRequirements(String requirements) {
-        Requirements = requirements;
-    }
 }
