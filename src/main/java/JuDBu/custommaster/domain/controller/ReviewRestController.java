@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReviewRestController {
     private final ReviewService reviewService;
 
-    // 댓글 등록
+    // Create review
     @PostMapping("/{shopId}/create")
     public ReviewDto createReview(
             @PathVariable("shopId") Long shopId,
@@ -25,42 +28,42 @@ public class ReviewRestController {
         return reviewService.createReview(shopId, comment);
     }
 
-    @GetMapping
+    // READ ALL review
+    @GetMapping("/{shopId}")
     public Page<ReviewDto> readReviewPaged(
-            @RequestParam(value = "page", defaultValue = "1")
-            Integer page,
-            @RequestParam(value = "size", defaultValue = "10")
-            Integer size
+            @PathVariable Long shopId,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable
     ) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return reviewService.readReviewPaged(pageable);
+        return reviewService.readReviewPaged(shopId, pageable);
     }
 
-    @GetMapping("{reviewId}")
+    // READ ONE Review
+    @GetMapping("/{shopId}/read/{reviewId}")
     public ReviewDto readReview(
-            @PathVariable("reviewId")
-            Long reviewId
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId
     ) {
-        return reviewService.readReview(reviewId);
+        return reviewService.readReview(shopId, reviewId);
     }
 
     // 댓글 수정
-    @PutMapping("{reviewId}")
+/*    @PutMapping("/{shopId}/update/{reviewId}")
     public ReviewDto updateReview(
-            @PathVariable("accountId") Long accountId,
-            @RequestParam("comment") String comment,
-            @RequestParam("images") MultipartFile[] images
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId,
+            @RequestParam("comment") String comment
     ) {
-        return reviewService.updateReview(accountId, comment, images,accountId);
-    }
+        return reviewService.updateReview(shopId, reviewId, comment);
+    }*/
 
     // 댓글 삭제
-    @DeleteMapping("{reviewId}")
+    @DeleteMapping("/{shopId}/delete/{reviewId}")
     public void deleteReview(
-            @PathVariable("reviewId")
-            Long reviewId
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId
     ) {
-        reviewService.deleteReview(reviewId);
+        reviewService.deleteReview(shopId, reviewId);
     }
 }
 

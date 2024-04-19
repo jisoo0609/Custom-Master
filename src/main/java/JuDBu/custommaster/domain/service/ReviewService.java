@@ -6,11 +6,13 @@ import JuDBu.custommaster.domain.entity.Review;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
 import JuDBu.custommaster.domain.entity.Shop;
 import JuDBu.custommaster.domain.entity.account.Account;
+import JuDBu.custommaster.domain.entity.account.Authority;
 import JuDBu.custommaster.domain.repo.OrdRepo;
 import JuDBu.custommaster.domain.repo.ReviewRepository;
 import JuDBu.custommaster.domain.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.dialect.pagination.LimitOffsetLimitHandler;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,11 +35,13 @@ public class ReviewService {
     private final ShopRepository shopRepo;
     private final OrdRepo ordRepo;
 
-    // 리뷰 저장(작성) 메서드
+    // CREATE review
+    // 추후 전 로직 완성되면 중간 주석 해제 필요
     public ReviewDto createReview(
             Long shopId,
             String comment
     ) {
+        // 어떤 유저가 리뷰를 작성하려 하는지 확인
         Account account = authFacade.getAccount();
         log.info("auth account: {}", account.getUsername());
 
@@ -59,167 +63,84 @@ public class ReviewService {
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
 
-    // review 페이지 단위로 받아오기
-    public Page<ReviewDto> readReviewPaged(Pageable pageable) {
-        Pageable reversePageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by("id").descending());
-
-        Page<Review> reviewsPage = reviewRepository.findAll(reversePageable);
-        List<ReviewDto> reviewDtos = reviewsPage.getContent().stream()
-                .map(ReviewDto::fromEntity)
-                .collect(Collectors.toList());
-        return new PageImpl<>(reviewDtos, reversePageable, reviewsPage.getTotalElements());
+    // READ ALL Review
+    // 한 매장에 달린 리뷰 전체 불러오기
+    public Page<ReviewDto> readReviewPaged(Long shopId, Pageable pageable) {
+        // 해당 매장의 리뷰 불러오기
+        Page<Review> reviews = reviewRepository.findByShop_IdOrderByIdDesc(shopId, pageable)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return reviews.map(ReviewDto::fromEntity);
     }
 
-    // 특정 reviewId review 가져오기
-    public ReviewDto readReview(Long reviewId) {
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        // review가 존재하지 않는 경우
-//        if (optionalArticle.isEmpty())
-//            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
+    // READ ONE Review
+    public ReviewDto readReview(Long shopId, Long reviewId) {
+        Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info("review: {}", review);
 
-        Review review = optionalReview.get();
         return ReviewDto.fromEntity(review);
     }
 
     // review 수정
+/*
     public ReviewDto updateReview(
-            Long id,
-            String comment,
-            MultipartFile[] images,
-            @RequestParam("accountId")
-            Long accountId
+            Long shopId,
+            Long reviewId,
+            String comment
     ) {
-        // TODO :
-        Optional<Review> optionalReview = reviewRepository.findById(accountId);
-        // TODO : 존재하지 않는 review 일 경우
-//        if (optionalReview.isEmpty())
-//            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_NOT_EXISTS);
+        // 계정 불러오기
+        Account account = authFacade.getAccount();
+        log.info("Account: {}", account.getUsername());
 
-        Review review = optionalReview.get();
-//        Member currentMember = facade.getCurrentMember();
-        // TODO : review 주인이 아닌 경우
-//        if (!review.getMember().getId().equals(currentMember.getId())) {
-//            log.info(review.getMember().getId().toString());
-//            log.info(currentMember.getId().toString());
-//            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
-//        }
+        // 수정하려는 review 불러오기
+        Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // TODO : ReviewId 값 받아와야 가능
-        // Review 수정
+        // 수정하려는 사람이 review 작성자인지 체크
+        if (!review.getAccount().getId().equals(account.getId())) {
+            if (!account.getAuthority().equals(Authority.ROLE_ADMIN)) {
+                log.error("리뷰 작성자만 수정 가능합니다.");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
+
+        // 리뷰 수정 후 저장
         review.setComment(comment);
-        // 기존 이미지 삭제
-        for (String imagePath : review.getImages()) {
-            deleteImage(imagePath);
-        }
-        review.getImages().clear();
-
-        // 새로운 이미지 저장
-        for (MultipartFile image : images) {
-            String imagePath = saveImage(image);
-            imagePath = imagePath.replaceAll("\\\\", "/");
-            review.getImages().add(imagePath);
-        }
-
-
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
+*/
 
+    // DELETE Reivew
+    public void deleteReview(Long shopId, Long reviewId) {
+        // 접근자 확인
+        Account account = authFacade.getAccount();
+        log.info("auth account: {}", account.getUsername());
 
-    // TODO : 다시 해야함
-    public void deleteReview(Long reviewId) {
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        // review 존재하지 않는 경우
-        if (optionalReview.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
+        // 삭제하려는 리뷰 불러오기
+        Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Review review = optionalReview.get();
-//        Member currentMember = facade.getCurrentMember();
-        // review 주인이 아닌 경우
-//        if (!reviewId.getMember().getId().equals(currentMember.getId()))
-//            throw new GlobalExceptionHandler(CustomGlobalErrorCode.ARTICLE_FORBIDDEN);
-
-        // 기존 이미지 삭제
-        for (String imagePath : review.getImages()) {
-            deleteImage(imagePath);
+        // 삭제하려는 사람이 reivew 주인과 일치하지 않으면
+        if (!review.getAccount().getId().equals(account.getId())) {
+            // 판매자 또는 관리자인지 확인
+            if (!checkAuth(account, shopId)) {
+                log.error("판매자 또는 리뷰 작성자만 삭제 가능합니다.");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
         }
-
+        // 리뷰 삭제
         reviewRepository.delete(review);
     }
 
-
-    // TODO : 나중에 정보 받아와서
-//    public Boolean isCurrentMemberLikedArticle(Long articleId) {
-//        Member currentMember = facade.getCurrentMember();
-//        return articleLikeRepository.existsByMemberAndArticleId(currentMember, articleId);
-//    }
-
-    public String saveImage(MultipartFile image) {
-        String imgDir = "media/img/reviews/";
-        String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-        Path imgPath = Path.of(imgDir + imgName);
-
-        try {
-            Files.createDirectories(Path.of(imgDir));
-            image.transferTo(imgPath);
-            log.info(image.getName());
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    // 권한이 매장 주인 또는 관리자인 경우 true
+    private boolean checkAuth(Account account, Long shopId) {
+        if (account.getAuthority().equals(Authority.ROLE_ADMIN)) {
+            return true;
         }
-        return imgPath.toString();
+
+        Shop shop = shopRepo.findById(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return shop.getAccount().getId().equals(account.getId());
     }
-
-    public void deleteImage(String imagePath) {
-        try {
-            Files.deleteIfExists(Path.of(imagePath));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-
-    /////////////////////////////// 0412
-
-//    private void createTagList(ArticleDto newDto, ArticleDto originalDto){
-//        Pattern myPattern = Pattern.compile("#(\\s+)");
-//        Matcher matcher = myPattern.matcher(newDto.getContent());
-//        Set<String> tags = new HashSet<>();
-//        while (matcher.find()){
-//            tags.add(matcher.group(1));
-//        }
-//        saveTag(tags,originalDto);
-//    }
-
-//    private void saveTag(Set<String> newTagSet, ArticleDto originalDto) {
-//        Article article = articleRepository.findById(originalDto.getId()).orElseThrow();
-//        Set<ArticleTag> originalTagSet = article.getTags();
-//        System.out.println("orgiinalTagSet사이즈....." + originalTagSet.size());
-//
-//        for (String tagContent : newTagSet) {
-//            Tag result = tagRepository.findTagByContent(tagContent);
-//            Tag newTag;
-//            // 미등록 태그 -> 태그 추가
-//
-//            if (result==null) {
-//                newTag = new Tag(tagContent);
-//                tagRepository.save(newTag);
-//            } else {
-//                System.out.println("궁금한 태그를 검색하세요"+result.getContent());
-//                newTag = result;
-//            }
-//            ArticleTag newTag = new ArticleTag(article, newTag);
-//            if (originalTagSet.isEmpty()) {
-//                articleTagRepository.save(newTag);
-//            } else {
-//                if (!(originalTagSet.contains(newTag))) {
-//                    articleTagRepository.save(new ArticleTag(article, newTag));
-//                } else {
-//                    break;
-//                }
-//            }
-//        }
-//    }
 }
