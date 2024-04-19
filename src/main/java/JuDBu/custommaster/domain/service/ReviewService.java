@@ -45,11 +45,11 @@ public class ReviewService {
         Account account = authFacade.getAccount();
         log.info("auth account: {}", account.getUsername());
 
-/*        // 리뷰를 작성하려는 고객이 해당 매장에서 구매 기록이 없는 경우
+        // 리뷰를 작성하려는 고객이 해당 매장에서 구매 기록이 없는 경우
         if (!ordRepo.findByShop_IdAndAccount_Id(shopId, account.getId())) {
             log.info("매장 구매 고객이 아닙니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }*/
+        }
 
         Shop shop = shopRepo.findById(shopId).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -90,6 +90,15 @@ public class ReviewService {
         log.info("review: {}", review);
 
         return ReviewDto.fromEntity(review);
+    }
+
+    // 특정 리뷰 작성자 이름 불러오기
+    public String reviewName(Long shopId, Long reviewId) {
+        Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info("review: {}", review);
+
+        return review.getAccount().getName();
     }
 
     // review 수정
