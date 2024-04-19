@@ -1,7 +1,7 @@
 package JuDBu.custommaster.domain.controller;
 
+import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
-import JuDBu.custommaster.domain.entity.Review;
 import JuDBu.custommaster.domain.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collections;
@@ -20,12 +21,12 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/review/{shopId}")
+@RequestMapping("/review")
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/read-all")
+    @GetMapping("/{shopId}/read-all")
     public String reviewList(
             @PathVariable("shopId") Long shopId,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)
@@ -42,16 +43,17 @@ public class ReviewController {
         return "review/review-list";
     }
 
-    @GetMapping("/read/{reviewId}")
+    @GetMapping("/{shopId}/read/{reviewId}")
     public String readOneReview(
             @PathVariable("shopId") Long shopId,
             @PathVariable("reviewId") Long reviewId,
-            Model model,
-            Review review
+            Model model
     ) {
-        //TODO
-        // 모델 불러와서 디테일 작성
-        model.addAttribute("review",review);
+        ReviewDto review = reviewService.readReview(shopId, reviewId);
+        AccountDto account = reviewService.getReviewName(shopId, reviewId);
+
+        model.addAttribute("review", review);
+        model.addAttribute("account", account);
         return "review/review-detail";
     }
 }

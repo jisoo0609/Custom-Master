@@ -2,13 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>리뷰 상세페이지</title>
+    <title>Review Detail</title>
 </head>
 <body>
+    <h2>리뷰 상세보기</h2>
+    <div>
+        <p>작성자: [[${account.name}]]</p>
+    </div>
+    <button>
+        <a href="/review/update">수정하기</a>
+    </button>
 
-<ul>
-    <li>th:text = <span th:text="${review}"></span></li>
-</ul>
-
+    <hr>
+    <div>
+        <p>[[${review.comment}]]</p>
+    </div>
+    <hr>
+    <a th:href="@{/review/__${shopId}__/read-all}">Back</a>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package JuDBu.custommaster.domain.service;
 
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
+import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Review;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
@@ -93,12 +94,12 @@ public class ReviewService {
     }
 
     // 특정 리뷰 작성자 이름 불러오기
-    public String reviewName(Long shopId, Long reviewId) {
+    public AccountDto getReviewName(Long shopId, Long reviewId) {
         Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("review: {}", review);
 
-        return review.getAccount().getName();
+        return AccountDto.fromEntity(review.getAccount());
     }
 
     // review 수정
