@@ -82,7 +82,7 @@ public class ReviewService {
     }
 
     // review 수정
-/*
+
     public ReviewDto updateReview(
             Long shopId,
             Long reviewId,
@@ -108,7 +108,7 @@ public class ReviewService {
         review.setComment(comment);
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
-*/
+
 
     // DELETE Reivew
     public void deleteReview(Long shopId, Long reviewId) {
