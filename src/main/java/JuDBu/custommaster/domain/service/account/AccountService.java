@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -57,6 +60,18 @@ public class AccountService {
         return AccountDto.fromEntity(account);
     }
 
+    public List<AccountDto> readAll(){
+        List<Account> accounts = accountRepo.findAll();
+        if (accounts.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        List<AccountDto> dtos = new ArrayList<>();
+
+        for (Account account : accounts){
+            dtos.add(AccountDto.fromEntity(account));
+        }
+        return dtos;
+    }
     // 사용자 정보 수정
     public AccountDto updateAccount(AccountDto dto) {
         Account target = authFacade.getAccount();
