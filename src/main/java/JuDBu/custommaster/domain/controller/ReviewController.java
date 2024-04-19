@@ -1,6 +1,7 @@
 package JuDBu.custommaster.domain.controller;
 
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
+import JuDBu.custommaster.domain.entity.Review;
 import JuDBu.custommaster.domain.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,13 @@ public class ReviewController {
     @GetMapping("/read/{reviewId}")
     public String readOneReview(
             @PathVariable("shopId") Long shopId,
-            @PathVariable("reviewId") Long reviewId
+            @PathVariable("reviewId") Long reviewId,
+            Model model,
+            Review review
     ) {
         //TODO
-
+        // 모델 불러와서 디테일 작성
+        model.addAttribute("review",review);
         return "review/review-detail";
     }
 }
