@@ -26,19 +26,15 @@ public class OrdRequestController {
 
     @PostMapping("/{shopId}/{productId}/request")
     public String request(
-            // 어떤 상점인지
             @PathVariable("shopId") Long shopId,
-            // 어떤 아이템 기준인지
             @PathVariable("productId") Long productId,
-            // 주문 정보
-            //@Validated
-            @ModelAttribute OrdRequestDto requestDto,
+            @Validated
+            @ModelAttribute("requestDto") OrdRequestDto requestDto,
             BindingResult bindingResult,
             @RequestParam("exImage") MultipartFile exImage
     ) {
         log.info("hasError={}", bindingResult.getAllErrors());
         if (bindingResult.hasErrors()) {
-            log.info("hasError={}", bindingResult.getAllErrors());
             return "ord/order-form";
         }
 

@@ -2,11 +2,9 @@ package JuDBu.custommaster.domain.dto.ord;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -14,21 +12,16 @@ import java.time.LocalDateTime;
 @Setter
 public class OrdRequestDto {
 
-    @NotNull(message = "이름은 필수입니다.")
-    @NotBlank(message = "이름을 입력해주세요.")
+    @NotBlank
     private String name;
 
-    @NotNull(message = "전화번호는 필수입니다.")
-    @NotBlank(message = "전화번호를 입력해주세요.")
-    @Size(min = 11, max = 13)
+    @Pattern(regexp = "01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "번호가 틀립니다.")
     private String phoneNumber;
 
-    @NotNull(message = "픽업 날짜는 필수입니다.")
-    @Future
+    @Future(message = "미래의 날짜로 입력해주세요.")
     private LocalDateTime pickupDate; // 픽업 날짜
 
-    @NotNull(message = "요구사항은 필수입니다.")
-    @NotBlank(message = "요구사항을 입력해주세요.")
+    @NotBlank
     private String Requirements; // 요구사항
 
     @Override
@@ -39,5 +32,37 @@ public class OrdRequestDto {
                 ", pickupDate='" + pickupDate + '\'' +
                 ", Requirements='" + Requirements + '\'' +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public LocalDateTime getPickupDate() {
+        return pickupDate;
+    }
+
+    public void setPickupDate(LocalDateTime pickupDate) {
+        this.pickupDate = pickupDate;
+    }
+
+    public String getRequirements() {
+        return Requirements;
+    }
+
+    public void setRequirements(String requirements) {
+        Requirements = requirements;
     }
 }

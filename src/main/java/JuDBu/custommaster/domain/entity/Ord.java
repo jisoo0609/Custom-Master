@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -36,7 +35,7 @@ public class Ord {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
-    private Integer phoneNumber;
+    private String phoneNumber;
     private LocalDateTime pickUpDate;
 
     @CreatedDate
@@ -64,13 +63,12 @@ public class Ord {
         PAID
     }
 
-    public static Ord createOrd(Account account, Shop shop, Product product, Integer phoneNumber, LocalDateTime pickupDate, String requirements, String exImagePath) {
+    public static Ord createOrd(Account account, Shop shop, Product product, String phoneNumber, LocalDateTime pickupDate, String requirements, String exImagePath) {
         return Ord.builder()
                 .account(account)
                 .shop(shop)
                 .product(product)
                 .phoneNumber(phoneNumber)
-                //.pickUpDate(LocalDateTime.parse(pickupDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")))
                 .pickUpDate(pickupDate)
                 .requirements(requirements)
                 .exImagePath(exImagePath)
@@ -82,6 +80,7 @@ public class Ord {
     public String toString() {
         return "Ord{" +
                 "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", pickUpDate=" + pickUpDate +
                 ", ordTime=" + ordTime +
                 ", totalPrice=" + totalPrice +
