@@ -29,7 +29,7 @@
 <body>
     <h2>리뷰 목록</h2>
     <button>
-        <a th:href="@{/review/__${shopId}__/create}">리뷰 작성하기</a>
+        <a th:href="@{/review/__${shopId}__/create-view}">리뷰 작성하기</a>
     </button>
     <!-- 리뷰가 없는 경우 -->
     <div th:if="${reviews.isEmpty()}">
@@ -41,10 +41,10 @@
     <div id="review-list" th:unless="${reviews.isEmpty()}" th:each="review ,idx : ${reviews}">
         <hr>
         <div>
-            <p th:text="${review.getId()}"></p>
             <a th:href="@{'/review/' + ${shopId} + '/read/' + ${review.getId()}}">
-                <p th:text="${names[idx.index]}"></p>
+                <p th:text="${review.getId()}"></p>
             </a>
+            <p th:text="${names[idx.index]}"></p>
             <p th:text="${review.getComment()}"></p>
         </div>
     </div>

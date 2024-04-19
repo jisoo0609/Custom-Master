@@ -3,8 +3,6 @@ package JuDBu.custommaster.domain.controller;
 import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
 import JuDBu.custommaster.domain.dto.shop.ShopReadDto;
-import JuDBu.custommaster.domain.entity.Shop;
-import JuDBu.custommaster.domain.repo.ShopRepository;
 import JuDBu.custommaster.domain.service.ReviewService;
 import JuDBu.custommaster.domain.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +26,7 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ShopService shopService;
 
-    @GetMapping("/{shopId}/create")
+    @GetMapping("/{shopId}/create-view")
     public String createView(
             @PathVariable("shopId") Long shopId,
             Model model
@@ -48,7 +45,7 @@ public class ReviewController {
         return "redirect:/review/{shopId}/read-all";
     }
 
-    @GetMapping("/{shopId}/update/{reviewId}")
+    @GetMapping("/{shopId}/update-view/{reviewId}")
     public String updateView(
             @PathVariable("shopId") Long shopId,
             @PathVariable("reviewId") Long reviewId,
@@ -80,7 +77,6 @@ public class ReviewController {
         Page<ReviewDto> reviews = reviewService.readReviewPaged(shopId, pageable);
         List<String> reviewNames = reviewService.getAccountName(shopId);
 
-        Collections.reverse(reviewNames);
         Collections.reverse(reviewNames);
         model.addAttribute("reviews", reviews);
         model.addAttribute("names", reviewNames);
