@@ -15,9 +15,9 @@ public class ReviewDto {
 
     private Long id;
     @Setter
-    private Account account;
+    private Long accountId;
     @Setter
-    private Shop shop;
+    private Long shopId;
     @Setter
     private String comment;
     @Setter
@@ -26,8 +26,8 @@ public class ReviewDto {
     public static ReviewDto fromEntity(Review entity){
         ReviewDto.ReviewDtoBuilder builder = ReviewDto.builder()
                 .id(entity.getId())
-                .account(entity.getAccount())
-                .shop(entity.getShop())
+                .accountId(entity.getAccount().getId())
+                .shopId(entity.getShop().getId())
                 .comment(entity.getComment())
                 .orderId(entity.getOrderId());
 
