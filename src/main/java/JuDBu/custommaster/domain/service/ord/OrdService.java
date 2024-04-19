@@ -26,16 +26,13 @@ public class OrdService {
     private final ProductRepo productRepository;
     private final OrdRepo ordRepository;
 
-    // todo 수정 중 : ord 찾아서 결제 정보 update 하기
+    // todo : 추후 user account 연결
     public Object confirmPayment(PaymentConfirmDto dto, Long ordId) {
         // HTTP 요청 보내진다.
-        Object tossPaymentObj = tossService.confirmPayment(dto);
-        log.info(tossPaymentObj.toString());
-        // 1. 결제한 물품 정보를 응답 body에서 찾는다.
-        String orderName = ((LinkedHashMap<String, Object>) tossPaymentObj)
-                .get("orderName").toString();
+//        Object tossPaymentObj = tossService.confirmPayment(dto);
+//        log.info(tossPaymentObj.toString());
 
-        // 2. ordId로 주문 찾기
+        // 1. ordId로 주문 찾기
         Optional<Ord> optionalOrd = ordRepository.findById(ordId);
         if (!optionalOrd.isPresent()) {
             // 주문을 찾을 수 없는 경우, 적절한 예외 처리 필요
@@ -43,9 +40,11 @@ public class OrdService {
         }
         Ord ord = optionalOrd.get();
 
-        // tpss order id, toss payment key
+        // 2. dto로 받아온 tpss order id, toss payment key
         String tossOrderId = dto.getOrderId();  // 클라이언트로부터 받은 주문 ID
         String paymentKey = dto.getPaymentKey();  // 클라이언트로부터 받은 결제 키
+
+        // 3. 결제한 시간
         LocalDateTime now = LocalDateTime.now();
 
         // ord 업데이트
@@ -55,7 +54,7 @@ public class OrdService {
         ord.setTotalPrice(dto.getAmount());
         ord.setStatus(Ord.Status.PAID); // 상태를 PAID로 변경
 
-        return OrdDto.fromEntity(ordRepository.save(ord)); // 주문 정보 저장
+        return OrdDto.fromEntity(ordRepository.save(ord)); // 주문 정보 업데이트
     }
 
     public OrdDto ordCreate(OrdDto dto) {
@@ -67,7 +66,7 @@ public class OrdService {
         Ord ord = Ord.builder()
                 .product(product)
                 .totalPrice(product.getExPrice()) // 예시로, 상품 가격을 주문 가격으로 설정
-                .status(Ord.Status.CONFIRMED)  // 주문 상태를 CONFIRMED로 설정
+                .status(Ord.Status.CONFIRMED)  // 주문 상태를 CONFIRM 로 설정
                 .build();
 
         // 3. 주문 저장
