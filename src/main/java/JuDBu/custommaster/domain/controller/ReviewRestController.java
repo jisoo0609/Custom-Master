@@ -4,13 +4,10 @@ import JuDBu.custommaster.domain.service.ReviewService;
 import JuDBu.custommaster.domain.dto.review.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -48,14 +45,14 @@ public class ReviewRestController {
     }
 
     // 댓글 수정
-/*    @PutMapping("/{shopId}/update/{reviewId}")
+    @PutMapping("/{shopId}/update/{reviewId}")
     public ReviewDto updateReview(
             @PathVariable("shopId") Long shopId,
             @PathVariable("reviewId") Long reviewId,
             @RequestParam("comment") String comment
     ) {
         return reviewService.updateReview(shopId, reviewId, comment);
-    }*/
+    }
 
     // 댓글 삭제
     @DeleteMapping("/{shopId}/delete/{reviewId}")

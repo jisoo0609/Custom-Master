@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review List</title>
+</head>
+<body>
+    <h2>리뷰 목록</h2>
+    <!-- 리뷰가 없는 경우 -->
+    <div th:if="${reviews.isEmpty()}">
+        <p>작성된 리뷰가 없습니다.</p>
+    </div>
+
+    <!-- 리뷰가 있는 경우 -->
+    <div id="review-list" th:unless="${reviews.isEmpty()}" th:each="review ,idx : ${reviews}"></div>
+</body>
+</html>

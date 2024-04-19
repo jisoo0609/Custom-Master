@@ -72,6 +72,17 @@ public class ReviewService {
         return reviews.map(ReviewDto::fromEntity);
     }
 
+    // 리뷰 작성자 이름 불러오기
+    public List<String> getAccountName(Long shopId) {
+        List<Review> reviewList = reviewRepository.findByShop_Id(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return reviewList.stream()
+                .map(Review::getAccount)
+                .map(Account::getName)
+                .collect(Collectors.toList());
+    }
+
     // READ ONE Review
     public ReviewDto readReview(Long shopId, Long reviewId) {
         Review review = reviewRepository.findByShop_IdAndId(shopId, reviewId)
@@ -82,7 +93,6 @@ public class ReviewService {
     }
 
     // review 수정
-
     public ReviewDto updateReview(
             Long shopId,
             Long reviewId,
