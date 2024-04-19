@@ -10,8 +10,13 @@
         <p>작성자: [[${account.name}]]</p>
     </div>
     <button>
-        <a href="/review/update">수정하기</a>
+        <a th:href="@{/review/__${shopId}__/update/{reviewId}(reviewId=${review.getId()})}">수정하기</a>
     </button>
+    <form id="delete" method="post" th:action="@{/review/__${shopId}__/delete/{reviewId}(reviewId=${review.getId()})}">
+        <button>
+            <label>리뷰 삭제</label>
+        </button>
+    </form>
 
     <hr>
     <div>

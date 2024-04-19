@@ -30,7 +30,7 @@ public class ReviewController {
     private final ShopService shopService;
 
     @GetMapping("/{shopId}/create")
-    public String reviewCreateView(
+    public String createView(
             @PathVariable("shopId") Long shopId,
             Model model
     ) {
@@ -45,7 +45,29 @@ public class ReviewController {
             @RequestParam("comment") String comment
     ) {
         reviewService.createReview(shopId, comment);
-        return String.format("redirect:/review/%d/read-all", shopId);
+        return "redirect:/review/{shopId}/read-all";
+    }
+
+    @GetMapping("/{shopId}/update/{reviewId}")
+    public String updateView(
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId,
+            Model model
+    ) {
+        ReviewDto review = reviewService.readReview(shopId, reviewId);
+        model.addAttribute("review", review);
+        return "review/update";
+    }
+
+    @PostMapping("/{shopId}/update/{reviewId}")
+    public String updateReview(
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId,
+            @RequestParam("comment") String comment
+
+    ) {
+        reviewService.updateReview(shopId, reviewId, comment);
+        return "review/update";
     }
 
     @GetMapping("/{shopId}/read-all")
@@ -79,8 +101,13 @@ public class ReviewController {
         return "review/review-detail";
     }
 
-    @GetMapping("/update")
-    public String updateReview() {
-        return "review/update";
+    // 등록된 리뷰 삭제
+    @PostMapping("/{shopId}/delete/{reviewId}")
+    public String delete(
+            @PathVariable("shopId") Long shopId,
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        reviewService.deleteReview(shopId, reviewId);
+        return "redirect:/review/{shopId}/read-all";
     }
 }
