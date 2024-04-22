@@ -37,7 +37,7 @@
     - 목표 달성률  50%
         - 토큰 만료시 `ExpiredException`이 발생하게 되는데 이는 스프링에서 발생하는 예외가 아니라 필터에서 발생하는 예외처리라 dispatcherServlet까지 들어오지 못하고 필터단에서 예외처리되어 나가버린다.
         
-        ![dispatcher.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/c69962b0-3951-485b-b10a-5bb29576bba8/31fd6eb3-5c2c-4ac2-a5b8-ddd2f41b1fbb/dispatcher.png)
+        ![dispatcher.png](https://github.com/likelion-backend-8th-pj2-team4-JuDBu/Custom-Master/assets/70869505/df829466-7bd3-4fc2-a39d-02d6035a9246)
         
         - 때문에 필터에서 발생하는 예외를 따로 예외처리를 구분해서 해줘야한다.
         - 방법이 대략 2가지가 있는 것 같다.
@@ -218,4 +218,5 @@
 
 Github Repository URL: https://github.com/likelion-backend-8th-pj2-team4-JuDBu/Custom-Master
 
-- 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세
+- 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세요
+- 
