@@ -32,7 +32,6 @@ public class OrdAcceptService {
 
     // Shop에 있는 주문 전체 불러오기
     public Page<OrdDto> readAllOrdByShop(Long shopId, Pageable pageable) {
-/*
         // 접근자 확인
         Account account = authFacade.getAccount();
         log.info("auth: {}", authFacade.getAuth().getName());
@@ -42,7 +41,6 @@ public class OrdAcceptService {
             log.error("매장 주인만 해당 페이지의 접근이 가능합니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-*/
 
         // 해당 매장의 주문 불러오기
         Page<Ord> ords = ordRepo.findByShop_IdOrderByIdDesc(shopId, pageable)
@@ -89,7 +87,7 @@ public class OrdAcceptService {
 
     // Shop에 있는 주문 상세 확인
     public OrdDto readDetails(Long shopId, Long ordId) {
-/*        // 접근자 확인
+        // 접근자 확인
         Account account = authFacade.getAccount();
         log.info("auth: {}", authFacade.getAuth().getName());
 
@@ -97,7 +95,7 @@ public class OrdAcceptService {
         if (!isOwner(account, shopId)) {
             log.error("매장 주인만 해당 페이지의 접근이 가능합니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }*/
+        }
 
         // 매장에 속한 주문인지 확인
         Ord ord = ordRepo.findByShop_IdAndId(shopId, ordId)
@@ -123,7 +121,7 @@ public class OrdAcceptService {
 
     // 주문 승락
     public OrdDto accept(Long shopId, Long ordId, String totalPrice) {
-/*        // 접근자 확인
+        // 접근자 확인
         Account account = authFacade.getAccount();
         log.info("auth: {}", authFacade.getAuth().getName());
 
@@ -131,7 +129,7 @@ public class OrdAcceptService {
         if (!isOwner(account, shopId)) {
             log.error("매장 주인만 해당 페이지의 접근이 가능합니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }*/
+        }
 
         // 매장에 속한 주문인지 확인
         Ord target = ordRepo.findByShop_IdAndId(shopId, ordId)
@@ -158,7 +156,7 @@ public class OrdAcceptService {
 
     // 주문 거절
     public void deleteOrd(Long shopId, Long ordId) {
-/*        // 접근자 확인
+        // 접근자 확인
         Account account = authFacade.getAccount();
         log.info("auth: {}", authFacade.getAuth().getName());
 
@@ -166,7 +164,7 @@ public class OrdAcceptService {
         if (!isOwner(account, shopId)) {
             log.error("매장 주인만 해당 페이지의 접근이 가능합니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }*/
+        }
 
         // 매장에 속한 주문인지 확인
         Ord target = ordRepo.findById(ordId)
