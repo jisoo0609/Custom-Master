@@ -62,7 +62,7 @@ public class OrderAcceptController {
         return "ord/ord-detail";
     }
 
-    // 주문 요청 승낙
+    // 주문 요청 승락
     @PostMapping("/accept/{ordId}")
     public String accept(
             @PathVariable("shopId") Long shopId,
