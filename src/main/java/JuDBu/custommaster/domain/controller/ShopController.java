@@ -1,13 +1,16 @@
 package JuDBu.custommaster.domain.controller;
 
 import JuDBu.custommaster.domain.dto.shop.ShopCreateDto;
+import JuDBu.custommaster.domain.dto.shop.ShopDto;
 import JuDBu.custommaster.domain.dto.shop.ShopReadDto;
-import JuDBu.custommaster.domain.service.ShopService;
 import JuDBu.custommaster.domain.dto.shop.ShopUpdateDto;
+import JuDBu.custommaster.domain.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,21 +30,22 @@ public class ShopController {
     // 상점에 대한 정보 입력 폼
     @GetMapping("create")
     public String createForm(@ModelAttribute("createDto") ShopCreateDto createDto) {
-        return "shop/shop-form";
+        return "shop/shop-create-form";
     }
 
     // 상점에 대한 정보 입력
     @PostMapping("create")
     public String create(
             @Validated
-            @ModelAttribute ShopCreateDto createDto,
+            @ModelAttribute("createDto")
+            ShopCreateDto createDto,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
 
         if (bindingResult.hasErrors()) {
-            log.info("hasErrors={}", bindingResult.hasErrors());
-            return "shop/shop-form";
+            log.info("errors={}", bindingResult.getAllErrors());
+            return "shop/shop-create-form";
         }
 
         log.info("shopCreateDto = {}", createDto);
@@ -52,8 +56,13 @@ public class ShopController {
 
     // 상점 리스트 조회
     @GetMapping
-    public String readPage(Pageable pageable, Model model) {
+    public String readPage(
+            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            Model model
+    ) {
         Page<ShopReadDto> shopReadPageDto = shopService.readPage(pageable);
+        model.addAttribute("pageable", pageable);
         model.addAttribute("shopReadPageDto", shopReadPageDto);
         // TODO 상점 리스트 페이지
         return "shop/shop-readPage";
@@ -69,26 +78,38 @@ public class ShopController {
     }
 
     // 상점 수정 입력 폼
-    @GetMapping("update")
-    public String updateForm() {
-        return "shop-update-form";
+    @GetMapping("{shopId}/update")
+    public String updateForm(@PathVariable("shopId") Long shopId, Model model) {
+        ShopDto findShop = shopService.findShop(shopId);
+        model.addAttribute("updateDto", findShop);
+        return "shop/shop-update-form";
     }
 
     // 상점 수정 정보 입력
-    @PutMapping("{shopId}")
+    @PostMapping("{shopId}/update")
     public String update(
             @PathVariable("shopId") Long shopId,
+            @Validated
+            @ModelAttribute("updateDto")
             ShopUpdateDto updateDto,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult.getAllErrors());
+            return "shop/shop-update-form";
+        }
+
         Long updateShopId = shopService.updateShop(shopId, updateDto);
         redirectAttributes.addAttribute("shopId", updateShopId);
-        return "redirect:/{shopId}";
+        return "redirect:/shop/{shopId}";
     }
 
     // 상점 삭제
-    @DeleteMapping("{shopId}")
-    public void delete(@PathVariable("shopId") Long shopId) {
+    @PostMapping("{shopId}/delete")
+    public String delete(@PathVariable("shopId") Long shopId) {
         shopService.deleteShop(shopId);
+        return "redirect:/shop";
     }
 }

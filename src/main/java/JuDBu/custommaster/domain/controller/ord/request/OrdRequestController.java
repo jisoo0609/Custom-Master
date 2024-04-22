@@ -28,13 +28,14 @@ public class OrdRequestController {
             @PathVariable("shopId") Long shopId,
             @PathVariable("productId") Long productId,
             @Validated
-            @ModelAttribute("requestDto") OrdRequestDto requestDto,
+            @ModelAttribute("requestDto")
+            OrdRequestDto requestDto,
             BindingResult bindingResult,
             @RequestParam("exImage") MultipartFile exImage,
             RedirectAttributes redirectAttributes
     ) {
         if (bindingResult.hasErrors()) {
-            log.info("hasError={}", bindingResult.getAllErrors());
+            log.info("errors={}", bindingResult.getAllErrors());
             return "ord/order-form";
         }
 

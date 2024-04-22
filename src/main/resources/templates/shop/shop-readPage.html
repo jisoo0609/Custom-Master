@@ -22,22 +22,30 @@
       }
       h1 {
           text-align: center;
-          margin-bottom: 20px;
+          margin-top: 100px; /* 위쪽 공백 추가 */
+          margin-bottom: 100px; /* 아래쪽 공백 추가 */
       }
-      table {
+      .shop-box {
           width: 100%;
-          border-collapse: collapse;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 20px;
       }
-      th, td {
+      .shop-item {
+          width: calc(30% - 10px); /* 30% 너비, 간격을 고려한 계산 */
+          padding: 20px;
           border: 1px solid #ddd;
-          padding: 10px;
-          text-align: left;
+          border-radius: 5px;
       }
-      th {
-          background-color: #f2f2f2;
+      .shop-item h2 {
+          margin-top: 0;
+          margin-bottom: 10px;
+          cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
+          color: #007bff; /* 링크 색상 */
       }
-      tbody tr:nth-child(even) {
-          background-color: #f9f9f9;
+      .shop-item p {
+          margin: 5px 0;
       }
       .pagination {
           list-style-type: none;
@@ -53,12 +61,39 @@
           display: block;
           padding: 8px 12px;
           text-decoration: none;
-          background-color: #4caf50;
+          background-color: #007bff;
           color: #fff;
           border-radius: 5px;
       }
       .pagination li.active a {
-          background-color: #45a049;
+          background-color: #007bff;
+      }
+      /* 추가된 CSS */
+      form {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      label {
+          font-weight: bold;
+          margin-right: 10px;
+      }
+      select {
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+          background-color: #fff;
+          margin-right: 10px;
+      }
+      input[type="submit"] {
+          padding: 8px 20px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      input[type="submit"]:hover {
+          background-color: #007bff;
       }
   </style>
 </head>
@@ -68,42 +103,40 @@
 
   <h1>상점 리스트</h1>
 
-  <table>
+  <form th:action th:method="get" id="sizeForm">
+    <!-- 현재 페이지 번호를 hidden으로 전달 -->
+    <input type="hidden" name="page" th:value="${pageable.getPageNumber()}">
+    <label for="size">상점 갯수:</label>
+    <select id="size" name="size" onchange="document.getElementById('sizeForm').submit()">
+      <option value="" disabled selected hidden>선택</option>
+      <option value="10" th:selected="${pageable.getPageSize() == 10}">10</option>
+      <option value="20" th:selected="${pageable.getPageSize() == 20}">20</option>
+      <option value="30" th:selected="${pageable.getPageSize() == 30}">30</option>
+    </select>
+  </form>
 
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>이름</th>
-      <th>주소</th>
-      <th>전화번호</th>
-      <th>제품 수</th>
-      <th>상세 정보</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="shop : ${shopReadPageDto.content}">
-      <td th:text="${shop.id}">1</td>
-      <td th:text="${shop.name}">상점 이름</td>
-      <td th:text="${shop.address}">상점 주소</td>
-      <td th:text="${shop.phoneNumber}">전화번호</td>
-      <td th:text="${#lists.size(shop.productReadDtos)}">0</td>
-      <td>
-        <a th:href="@{'/shop/' + ${shop.id}}">상세 보기</a>
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-
-  <div th:if="${shopReadPageDto.totalPages > 1}">
-    <ul class="pagination">
-      <li th:each="pageNumber : ${#numbers.sequence(0, shopReadPageDto.totalPages - 1)}" th:class="${pageNumber == shopReadPageDto.number ? 'active' : ''}">
-        <a th:href="@{'?page=' + ${pageNumber}}">[[${pageNumber + 1}]]</a>
-      </li>
-    </ul>
+  <div class="shop-box">
+    <div th:each="shop : ${shopReadPageDto.content}" class="shop-item">
+      <h2>
+        <a th:text="${shop.name}" th:href="@{'shop/' + ${shop.id}}">[[${shop.name}]]</a>
+      </h2>
+      <p>ID: <span th:text="${shop.id}">[[${shop.id}]]</span></p>
+      <p>주소: <span th:text="${shop.address}">[[${shop.address}]]</span></p>
+      <p>전화번호: <span th:text="${shop.phoneNumber}">[[${shop.phoneNumber}]]</span></p>
+      <p>제품 수: <span th:text="${#lists.size(shop.productReadDtos)}">[[${#lists.size(shop.productReadDtos)}]]</span></p>
+      <p><a th:href="@{'shop/' + ${shop.id}}">상세 보기</a></p>
+    </div>
   </div>
 
 </div>
+
+<div th:if="${shopReadPageDto.totalPages > 1}">
+  <ul class="pagination">
+    <li th:each="pageNumber : ${#numbers.sequence(0, shopReadPageDto.totalPages - 1)}" th:class="${pageNumber == shopReadPageDto.number ? 'active' : ''}">
+      <a th:href="@{'?page=' + ${pageNumber} + '&size=' + ${pageable.getPageSize()}}">[[${pageNumber + 1}]]</a>
+    </li>
+  </ul>
+</div>
+
 </body>
 </html>
