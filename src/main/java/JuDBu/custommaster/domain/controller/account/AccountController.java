@@ -24,81 +24,18 @@ public class AccountController {
         return "account/login-form";
     }
 
+    @GetMapping("/profile")
+    public String profileForm() { return  "account/my-profile"; }
+
     @GetMapping("/logout")
-    public String logout() {
+    public String logoutForm() {
         return "account/logout";
     }
 
-    @GetMapping("/oauth")
-    public String oauth() {
-        return "account/oauth-login";
-    }
-    // 회원가입 화면
-    @GetMapping("/register")
-    public String registerForm() {
-        return "account/register";
-    }
+    @GetMapping("redirect")
+    public String redirectForm() {return "account/refresh-token";}
 
-    @GetMapping("/users-register")
-    public String userRegisterForm() {
-        return "account/user-register-form";
-    }
 
-    @PostMapping("/users-register")
-    public String userSignUpRequest(
-            @RequestParam("username")
-            String username,
-            @RequestParam("password")
-            String password,
-            @RequestParam("password-check")
-            String passwordCheck,
-            @RequestParam("name")
-            String name,
-            @RequestParam("email")
-            String email
-    ) {
-        if (password.equals(passwordCheck)) {
-            manager.createUser(CustomAccountDetails.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(password))
-                    .name(name)
-                    .email(email)
-                    .authority(Authority.ROLE_INACTIVE_USER)
-                    .build());
-        }
-        return "redirect:/account/login";
-    }
-
-    @GetMapping("/business-register")
-    public String businessRegisterForm() {
-        return "account/business-register-form";
-    }
-
-    @PostMapping("/business-register")
-    public String businessSignUpRequest(
-            @RequestParam("username")
-            String username,
-            @RequestParam("password")
-            String password,
-            @RequestParam("password-check")
-            String passwordCheck,
-            @RequestParam("name")
-            String name,
-            @RequestParam("email")
-            String email,
-            @RequestParam("business-number")
-            String businessNumber
-    ) {
-        if (password.equals(passwordCheck)) {
-            manager.createUser(CustomAccountDetails.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(password))
-                    .name(name)
-                    .email(email)
-                    .businessNumber(businessNumber)
-                    .authority(Authority.ROLE_INACTIVE_USER)
-                    .build());
-        }
-        return "redirect:/account/login";
-    }
+    @GetMapping("test")
+    public String testForm() {return "account/test";}
 }

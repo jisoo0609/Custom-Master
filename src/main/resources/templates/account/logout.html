@@ -9,10 +9,9 @@
 <script>
     $(document).ready(function () {
         // 쿠키 이름을 사용하여 쿠키 삭제
-        document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("CMToken");
 
-        location.href = '/account/home';
+        location.href = '/api/account/logout';
     })
 </script>
 </body>

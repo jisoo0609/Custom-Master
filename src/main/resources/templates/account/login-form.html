@@ -58,20 +58,20 @@
             // AJAX 요청
             $.ajax({
                 type: "POST",
-                url: "/account/login",
+                url: "/api/account/login",
                 contentType: "application/json",
 
                 data: JSON.stringify(formData),
                 success: function(data) {
                     // 로그인 성공 시 로직 (예: 페이지 리다이렉트)
-                    const token = data.token;
+                    const token = data.accessToken;
 
                     // 토큰 값이 정상적으로 반환되었는지 확인
                     if (token) {
                         // jwt 토큰을 프론트에서 저장함
-                        localStorage.setItem("jwtToken", token);
+                        localStorage.setItem("CMToken", token);
                         console.log("로그인 성공", token);
-                        window.location.href = "/my-profile";
+                        location.href = "/account/profile";
 
                     } else {
                         alert("아이디나 비밀번호가 일치하지 않습니다.");

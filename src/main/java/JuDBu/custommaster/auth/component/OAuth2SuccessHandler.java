@@ -63,7 +63,7 @@ public class OAuth2SuccessHandler
         UserDetails details
                 = userDetailsManager.loadUserByUsername(username);
         // JWT 생성
-        String token = tokenUtils.generateToken(details);
+        String token = tokenUtils.generateToken(details, "accessToken");
         log.info("Token: {}", token);
 
         Cookie cookie = new Cookie("jwtToken", token);
