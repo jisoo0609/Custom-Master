@@ -38,61 +38,67 @@
           padding: 0;
       }
 
-      .product-item {
+      .product-item, .review-item {
           border-radius: 5px;
           padding: 10px;
           margin-bottom: 20px;
           border: 1px solid #ddd; /* 테두리 추가 */
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+          position: relative; /* 상품 및 리뷰 내부 버튼 위치 지정을 위한 relative 설정 */
       }
 
-      .product-item a {
-          font-weight: bold;
-      }
-
-      .product-item p {
-          margin: 5px 0;
-      }
-
-      .product-item:hover {
+      .product-item:hover, .review-item:hover {
           background-color: #f9f9f9;
       }
 
-      /* 수정 및 삭제 버튼 스타일 */
-      .edit-delete-buttons {
-          display: flex; /* 버튼을 가로로 정렬 */
-          gap: 30px; /* 버튼 사이의 간격 */
-          position: absolute; /* 상단에 위치 */
-          top: 20px; /* 위쪽 여백 */
-          right: 20px; /* 오른쪽 여백 */
-          z-index: 1; /* 다른 요소 위에 표시 */
-      }
-
-      .edit-delete-buttons a,
-      #deleteForm button,
-      .shop-list-button {
-          padding: 10px 20px;
+      button {
           background-color: #007bff;
           color: #ffffff;
           border: none;
           border-radius: 5px;
+          padding: 8px 16px;
           cursor: pointer;
-          text-decoration: none; /* 링크의 밑줄 제거 */
+          text-decoration: none;
           transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
       }
 
-      .edit-delete-buttons a:hover,
-      .shop-list-button:hover {
-          background-color: #0056b3;
+      .edit-delete-buttons {
+          display: flex;
+          gap: 10px;
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          z-index: 1;
       }
 
-      /* 삭제 버튼 스타일 */
-      #deleteForm button {
-          background-color: #dc3545; /* 빨간색 배경색 */
+      .edit-button, .delete-button{
+          padding: 8px 12px;
+          font-size: 12px;
       }
 
-      #deleteForm button:hover {
-          background-color: #c82333; /* 더 진한 빨간색 배경색 */
+      .write-review-button {
+          right: 20px;
+          transform: translateY(-50%);
+      }
+
+      .request-button {
+          background-color: #007bff;
+          color: #ffffff;
+          border: none;
+          border-radius: 5px;
+          padding: 8px 16px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          transform: translateY(-50%);
+      }
+
+      .review-actions {
+          display: flex;
+          gap: 10px;
       }
   </style>
 </head>
@@ -101,13 +107,17 @@
 <div class="container">
 
   <!-- 상점 목록 버튼 -->
-  <a href="/shop" class="shop-list-button">상점 목록</a>
+  <form th:action="@{/shop}" method="get">
+    <button type="submit" class="shop-list-button">상점 목록</button>
+  </form>
 
   <!-- 수정 및 삭제 버튼 -->
   <div class="edit-delete-buttons">
-    <a th:href="@{/shop/{shopId}/update(shopId=${shopId})}">수정</a>
-    <form th:action="@{/shop/{shopId}/delete(shopId=${shopId})}" method="POST" id="deleteForm">
-      <button type="submit">삭제</button>
+    <form th:action="@{|/shop/${shopId}/update|}" method="get">
+      <button type="submit" class="edit-button">수정</button>
+    </form>
+    <form th:action="@{|/shop/${shopId}/delete|}" method="post">
+      <button type="submit" class="delete-button">삭제</button>
     </form>
   </div>
 
@@ -124,11 +134,23 @@
   <div>
     <h2>상품 목록</h2>
     <div th:each="product : ${readDto.productReadDtos}" class="product-item">
-      <p><strong>ID:</strong> <a th:href="@{/product/{productId}(productId=${product.id})}" th:text="${product.id}">[[${product.id}]]</a></p>
-      <p><strong>이름:</strong> <a th:href="@{/product/{productId}(productId=${product.id})}" th:text="${product.name}">[[${product.name}]]</a></p>
-      <p><strong>가격:</strong> <span th:text="${product.price}">[[${product.price}]]</span></p>
+      <!-- 상품의 ID와 이름에 링크 추가 -->
+      <p><strong>ID:</strong> <a th:href="@{|/product/${product.id}|}" th:text="${product.id}">product Id</a></p>
+      <p><strong>이름:</strong> <a th:href="@{|/product/${product.id}|}" th:text="${product.name}">product Name</a></p>
+      <p><strong>가격:</strong> <span th:text="${product.price}">Product Price</span></p>
+      <!-- 주문하기 버튼 -->
+      <form th:action="@{|/${shopId}/${product.id}/request|}" method="get">
+        <button type="submit" class="request-button">주문하기</button>
+      </form>
     </div>
   </div>
+
+  <!-- 최근 5개의 리뷰를 보여준다 -->
+
+  <!-- 리뷰 리스트로 이동 버튼 -->
+  <form th:action="@{|/review/${shopId}/read-all|}" method="get">
+    <button type="submit" class="write-review-button">리뷰 리스트로 이동</button>
+  </form>
 </div>
 
 </body>

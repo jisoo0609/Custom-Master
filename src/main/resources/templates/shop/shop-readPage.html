@@ -95,6 +95,19 @@
       input[type="submit"]:hover {
           background-color: #007bff;
       }
+      .create-shop-button {
+          text-align: right;
+          margin-bottom: 20px;
+      }
+      .create-shop-button a {
+          padding: 8px 20px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none;
+      }
   </style>
 </head>
 <body>
@@ -103,9 +116,13 @@
 
   <h1>상점 리스트</h1>
 
+  <div class="create-shop-button">
+    <a href="/shop/create">상점 개설하기</a>
+  </div>
+
   <form th:action th:method="get" id="sizeForm">
     <!-- 현재 페이지 번호를 hidden으로 전달 -->
-    <input type="hidden" name="page" th:value="${pageable.getPageNumber()}">
+    <input type="hidden" name="page" value="0">
     <label for="size">상점 갯수:</label>
     <select id="size" name="size" onchange="document.getElementById('sizeForm').submit()">
       <option value="" disabled selected hidden>선택</option>

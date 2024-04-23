@@ -5,7 +5,6 @@ import JuDBu.custommaster.domain.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Product;
 import JuDBu.custommaster.domain.entity.Shop;
-import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.repo.OrdRepo;
 import JuDBu.custommaster.domain.repo.ProductRepo;
 import JuDBu.custommaster.domain.repo.ShopRepository;
