@@ -30,6 +30,7 @@ public class ShopController {
     // 상점에 대한 정보 입력 폼
     @GetMapping("create")
     public String createForm(@ModelAttribute("createDto") ShopCreateDto createDto) {
+        //TODO 인증된 사용자 정보 확인
         return "shop/shop-create-form";
     }
 
@@ -70,10 +71,14 @@ public class ShopController {
 
     // 상점 상세 조회
     @GetMapping("{shopId}")
-    public String readOne(@PathVariable("shopId") Long shopId, Model model) {
+    public String readOne(
+            @PathVariable("shopId")
+            Long shopId,
+            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            Model model) {
         ShopReadDto readDto = shopService.readOne(shopId);
         model.addAttribute("readDto", readDto);
-        // TODO 상점 상세 페이지
         return "shop/shop";
     }
 
