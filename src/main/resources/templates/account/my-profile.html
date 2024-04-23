@@ -11,7 +11,14 @@
 <body>
 <h1>마이페이지</h1>
 <h2>[[${account.name}]]님</h2>
+<div>
+    <h3>회원 정보</h3>
+    <p>이름: [[${account.name}]]</p>
+    <p>email: [[${account.email}]]</p>
+</div>
 
+<a href="/profile/ord-list">사용자 주문 확인하기</a>
+<hr>
 <a href="/account/logout">로그아웃</a>
 </body>
 </html>

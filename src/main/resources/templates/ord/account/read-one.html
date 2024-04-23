@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Order Details</title>
+    <style>
+        .product-info {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .order-info {
+            display: flex;
+        }
+
+        .product-info p {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .product-info p:first-child {
+            width: 100px;
+            margin-right: 50px;
+        }
+    </style>
 </head>
 <body>
+<h2>주문 상세</h2>
+<hr>
+<div class="product-info">
+    <p>제품명: [[${product.name}]]</p>
+    <span style="margin-right: 10px;"></span>
+    <p>단가: [[${product.exPrice}]]</p>
+</div>
+<hr>
+<div id="order">
+    <p>주문 매장: [[${shop.name}]]</p>
+    <hr>
+    <div class="order-info">
+        <p>주문 시각: [[${ord.ordTime}]]</p>
+        <span style="margin-right: 30px;"></span>
+        <p>픽업 날짜: [[${ord.pickUpDate}]]</p>
+    </div>
+</div>
+<div>
+    <div id="order-status" style="display: flex; align-items: center;">
+        <p style="margin-right: 10px;">주문 상태: [[${ord.status}]]</p>
+    </div>
+</div>
+<div th:if="${ord.status.toString() == 'CONFIRMED'}">
+    <p>확정 금액: [[${ord.totalPrice}]]</p>
+    <!-- 해당 부분에 토스페이먼츠 결제로 넘어가게 링크 넣으면 될 것 같습니다. -->
+    <form id="reject" method="post" th:action="@{}">
+        <button id="submit">
+            <label>결제하기</label>
+        </button>
+    </form>
+</div>
+<hr>
+<div>
+    <p>요청 사항</p>
+    <div th:if="${ord.requirements == null or ord.requirements.length() == 0}">
+        <p>요청 사항이 없습니다.</p>
+    </div>
+    <div th:unless="${ord.requirements == null or ord.requirements.length() == 0}">
+        <p>[[${ord.requirements}]]</p>
+    </div>
+</div>
+<hr>
+<div>
+    <img src="${ord.exImagePath}">
+</div>
 
 </body>
 </html>

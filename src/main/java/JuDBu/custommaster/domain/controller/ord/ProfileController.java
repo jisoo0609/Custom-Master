@@ -40,10 +40,12 @@ public class ProfileController {
             Pageable pageable,
             Model model
     ) {
+        AccountDto account = profileService.readOneAccount();
         Page<OrdDto> ords = profileService.readAllOrdByAccount(pageable);
         List<String> productNames = profileService.ordProductName();
         List<String> shopNames = profileService.getShopName();
 
+        model.addAttribute("account", account);
         model.addAttribute("ords", ords);
         model.addAttribute("names", productNames);
         model.addAttribute("shops", shopNames);
