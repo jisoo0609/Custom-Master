@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Order Details</title>
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
     <style>
         .product-info {
             display: flex;
@@ -50,12 +51,15 @@
 </div>
 <div th:if="${ord.status.toString() == 'CONFIRMED'}">
     <p>확정 금액: [[${ord.totalPrice}]]</p>
-    <!-- 해당 부분에 토스페이먼츠 결제로 넘어가게 링크 넣으면 될 것 같습니다. -->
-    <form id="reject" method="post" th:action="@{}">
-        <button id="submit">
-            <label>결제하기</label>
-        </button>
-    </form>
+    <div class="col-lg-6 p-3">
+        <div id="payment-wrapper">
+            <div id="payment-method"></div>
+            <div id="agreement"></div>
+            <div class="p-3 w-100">
+                <button id="payment-request-button" class="btn btn-primary w-100">결제하기</button>
+            </div>
+        </div>
+    </div>
 </div>
 <hr>
 <div>
@@ -73,4 +77,53 @@
 </div>
 
 </body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const ordId = urlParams.get('ordId');
+    console.log(ordId);
+
+    const clientKey = 'test_ck_P9BRQmyarYyjO1JwLLbZrJ07KzLN';
+    const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS);
+    const paymentMethodsWidget = paymentWidget.renderPaymentMethods('#payment-method', {
+        value: 0,
+        currency: 'KRW',
+        country: 'KR'
+    }, { variantKey: 'widgetA'});
+    const paymentAgreement = paymentWidget.renderAgreement('#agreement', { variantKey: 'AGREEMENT'});
+    const paymentRequestButton = document.getElementById('payment-request-button');
+    paymentRequestButton.addEventListener('click', () => {
+        try {
+            paymentWidget.requestPayment({
+                orderId: crypto.randomUUID().replaceAll('-',''),
+                // toss 구매 상 정보
+                orderName: `${productId}-${document.getElementById('product-name').innerText}`,
+            }).then(async data => {
+                const response = await fetch(`/toss/confirm-payment/${ordId}`, { // 백틱 사용
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'Authorization': 'Bearer ' + document.getElementById('bearer-input').value,
+                    },
+                    body: JSON.stringify({
+                        paymentKey: data.paymentKey,
+                        orderId: data.orderId,
+                        amount: data.amount
+                    }),
+                })
+                if (response.ok) {
+                    location.pathname = '/payment/success.html'
+                }else {
+                    throw new Error('Payment verification failed.');
+                }
+            });
+        } catch(err) {
+            if (err.code === 'USER_CANCEL') {
+                alert('사용자 결제 취소')
+            }
+            else {
+                alert('Error: ' + err.message);
+            }
+        }
+    });
+</script>
 </html>
