@@ -18,10 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -57,23 +57,15 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         log.info(ex.getMessage());
 
         if(ex.getMessage().equals("1")){
-//            String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
-//            log.info("error authHeader: {}",authHeader);
-//            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-//                String token = authHeader.split(" ")[1];
-//                String username = tokenService.username(token);
-//                if (username != null){
-//                    UserDetails userDetails = manager.loadUserByUsername(username);
-//                    JwtResponseDto dto = tokenService.issueAccess(userDetails);
-//                    jwtErrorResponse.setToken(dto.getAccessToken());
-//                }
-//            }
-            Cookie[] cookies = req.getCookies();
-            if(cookies != null){
-                for(Cookie c : cookies){
-                    if (c.getName().equals("CMToken")){
-                        log.info("cookie value: {}", c.getValue());
-                    }
+            String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
+            log.info("error authHeader: {}",authHeader);
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.split(" ")[1];
+                String username = tokenService.username(token);
+                if (username != null){
+                    UserDetails userDetails = manager.loadUserByUsername(username);
+                    JwtResponseDto dto = tokenService.issueAccess(userDetails);
+                    jwtErrorResponse.setToken(dto.getAccessToken());
                 }
             }
             jwtErrorResponse.setResponse(ErrorCode.EXPIRED_TOKEN);

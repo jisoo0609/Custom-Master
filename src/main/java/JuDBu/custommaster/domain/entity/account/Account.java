@@ -26,13 +26,10 @@ public class Account {
     private Authority authority;    // 권한
 
     public void updateInfo(
-
             String password,
-            String name,
             String email 
     ){
         this.password = password;
-        this.name = name;
         this.email = email;
     }
 

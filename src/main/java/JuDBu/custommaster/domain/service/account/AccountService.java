@@ -60,19 +60,13 @@ public class AccountService {
     public AccountDto updateAccount(AccountDto dto) {
         Account target = authFacade.getAccount();
 
-        // 토큰의 유저와 수정하는 유저가 똑같은 유저인지
-        if(!target.getUsername().equals(dto.getUsername())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
         // 비밀번호 확인
-        if (!passwordEncoder.matches(dto.getPassword(), target.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPasswordCheck(), target.getPassword())) {
             log.error("비밀번호가 일치하지 않습니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        target.updateInfo(dto.getPassword(), dto.getName(), dto.getEmail());
-
+        target.updateInfo(dto.getPassword(), dto.getEmail());
         return AccountDto.fromEntity(accountRepo.save(target));
     }
 

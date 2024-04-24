@@ -3,7 +3,9 @@ package JuDBu.custommaster.domain.controller.account;
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
 import JuDBu.custommaster.auth.jwt.JwtTokenUtils;
 import JuDBu.custommaster.auth.jwt.dto.JwtRequestDto;
+import JuDBu.custommaster.domain.dto.account.MailCode;
 import JuDBu.custommaster.domain.entity.account.Account;
+import JuDBu.custommaster.domain.entity.account.MailAuth;
 import JuDBu.custommaster.domain.service.account.AccountService;
 import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.account.CustomAccountDetails;
@@ -43,30 +45,27 @@ public class AccountRestController {
 
     @PostMapping("/register")
     public String register(
-            @RequestParam("username")
-            String username,
-            @RequestParam("password")
-            String password,
-            @RequestParam("password-check")
-            String passwordCheck,
-            @RequestParam("name")
-            String name,
-            @RequestParam("email")
-            String email
+            @RequestBody
+            AccountDto dto
     ){
-        if (password.equals(passwordCheck)) {
+        log.info("on register");
+        log.info("register username: {}",dto.getUsername());
+        log.info("password: {}",dto.getPassword());
+        log.info("check: {}",dto.getPasswordCheck());
+        if (dto.getPassword().equals(dto.getPasswordCheck())) {
             manager.createUser(CustomAccountDetails.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(password))
-                    .name(name)
-                    .email(email)
+                    .username(dto.getUsername())
+                    .password(passwordEncoder.encode(dto.getPassword()))
+                    .name(dto.getName())
+                    .email(dto.getEmail())
                     .authority(Authority.ROLE_INACTIVE_USER)
                     .build());
         }
+        log.info("register done");
         return "register done";
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<JwtResponseDto> logIn(
             @RequestBody
             JwtRequestDto dto,
@@ -111,20 +110,13 @@ public class AccountRestController {
 
     @PostMapping("/update")
     public String update(
-            @RequestParam("username")
-            String username,
-            @RequestParam("password-check")
-            String passwordCheck,
-            @RequestParam("name")
-            String name,
-            @RequestParam("email")
-            String email
+            @RequestBody
+            AccountDto userDto
     ){
         AccountDto dto = AccountDto.builder()
-                .username(username)
-                .password(passwordCheck)
-                .name(name)
-                .email(email)
+                .password(userDto.getPassword())
+                .passwordCheck(userDto.getPasswordCheck())
+                .email(userDto.getEmail())
                 .build();
         accountService.updateAccount(dto);
         return "register done";
@@ -147,8 +139,8 @@ public class AccountRestController {
 
     @PostMapping("/check-mail")
     public String checkCode(
-            @RequestParam
-            String authString
+            @RequestBody
+            MailCode dto
     ){
         Account account = authFacade.getAccount();
 
@@ -161,7 +153,7 @@ public class AccountRestController {
         if(!mailService.checkMailAuth(account.getUsername())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if (!mailService.checkCode(account.getUsername(), authString)){
+        if (!mailService.checkCode(account.getUsername(), dto.getCode())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 

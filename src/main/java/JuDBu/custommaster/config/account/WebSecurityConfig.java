@@ -61,10 +61,10 @@ public class WebSecurityConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID", "CMToken")
                 )
-//
                 .addFilterBefore(new JwtTokenFilter(jwtTokenUtils, manager),
                         AuthorizationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(objectMapper, tokenService, manager), JwtTokenFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(objectMapper, tokenService, manager),
+                        JwtTokenFilter.class)
 
         ;
         return http.build();
