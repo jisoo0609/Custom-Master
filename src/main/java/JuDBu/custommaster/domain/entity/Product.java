@@ -16,22 +16,29 @@ public class Product {
     private Long id;
 
     @Setter
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
     private String name;
     private Integer exPrice;
     private String exImage;
-    private Integer resultPrice; // 상품의 최종 가격을 상품에 등록할 필요가 있을까?
-    private Integer quantity; // 커스텀 상품의 수량이 필요 있을까?
+    private Integer resultPrice; //TODO: 상품의 최종 가격을 상품에 등록할 필요가 있을까?
+    private Integer quantity; //TODO: 커스텀 상품의 수량이 필요 있을까?
 
-    public static Product createProduct(String name, Integer exPrice, String exImage) {
+    public static Product createProduct(Shop shop, String name, Integer exPrice, String exImage) {
         return Product.builder()
+                .shop(shop)
                 .name(name)
-                .exImage(exImage)
+                .exPrice(exPrice)
                 .exImage(exImage)
                 .build();
+    }
+
+    public void updateProduct(String name, Integer exPrice, String exImage) {
+        this.name = name;
+        this.exPrice = exPrice;
+        this.exImage = exImage;
     }
 
     @Override

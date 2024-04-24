@@ -102,6 +102,9 @@
 
     <input type="submit" value="수정하기">
   </form>
+  <form th:action="@{/shop/{shopId}(shopId=${shopId})}">
+    <input type="submit" value="뒤로가기">
+  </form>
 </div>
 </body>
 </html>

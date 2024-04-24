@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ProductDto {
+
     private Long id;
     private Long shopId;
     private String name;
@@ -25,5 +26,17 @@ public class ProductDto {
                 .quantity(product.getQuantity())
                 //.exImage(product.getExImage())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", shopId=" + shopId +
+                ", name='" + name + '\'' +
+                ", exPrice=" + exPrice +
+                ", quantity=" + quantity +
+                ", exImage=" + exImage +
+                '}';
     }
 }

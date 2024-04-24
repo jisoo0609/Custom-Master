@@ -150,7 +150,7 @@
 <div th:if="${shopReadPageDto.totalPages > 1}">
   <ul class="pagination">
     <li th:each="pageNumber : ${#numbers.sequence(0, shopReadPageDto.totalPages - 1)}" th:class="${pageNumber == shopReadPageDto.number ? 'active' : ''}">
-      <a th:href="@{'?page=' + ${pageNumber} + '&size=' + ${pageable.getPageSize()}}">[[${pageNumber + 1}]]</a>
+      <a th:href="@{|?page=${pageNumber}&size=${pageable.getPageSize()}|}">[[${pageNumber + 1}]]</a>
     </li>
   </ul>
 </div>
