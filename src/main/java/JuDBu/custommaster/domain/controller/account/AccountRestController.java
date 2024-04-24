@@ -1,6 +1,8 @@
 package JuDBu.custommaster.domain.controller.account;
 
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
+import JuDBu.custommaster.auth.jwt.JwtTokenUtils;
+import JuDBu.custommaster.auth.jwt.dto.JwtRequestDto;
 import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.service.account.AccountService;
 import JuDBu.custommaster.domain.dto.account.AccountDto;
@@ -8,9 +10,15 @@ import JuDBu.custommaster.domain.dto.account.CustomAccountDetails;
 import JuDBu.custommaster.domain.entity.account.Authority;
 import JuDBu.custommaster.auth.jwt.dto.JwtResponseDto;
 import JuDBu.custommaster.domain.service.account.MailService;
+import JuDBu.custommaster.domain.service.account.TokenService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +34,7 @@ public class AccountRestController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationFacade authFacade;
     private final MailService mailService;
+    private final TokenService tokenService;
 
     @PostMapping("/business-register")
     public JwtResponseDto businessRegister(){
@@ -55,6 +64,41 @@ public class AccountRestController {
                     .build());
         }
         return "register done";
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<JwtResponseDto> logIn(
+            @RequestBody
+            JwtRequestDto dto,
+            HttpServletResponse response
+    ){
+        UserDetails userDetails = manager.loadUserByUsername(dto.getUsername());
+        if(!passwordEncoder.matches(dto.getPassword(), userDetails.getPassword())){
+            log.info("비밀번호 오류");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        JwtResponseDto accessTokenDto = tokenService.issueAccess(userDetails);
+        JwtResponseDto refreshTokenDto = tokenService.issueRefresh(userDetails, accessTokenDto.getAccessToken());
+
+        Cookie cookie = new Cookie("CMToken", refreshTokenDto.getRefreshToken());
+        cookie.setMaxAge(24 * 60 * 60 * 2);
+        cookie.setPath("/"); // 쿠키의 경로 설정
+        cookie.setDomain("localhost");
+        cookie.setSecure(false);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().body(refreshTokenDto);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<AccountDto> profile(){
+        AccountDto dto = accountService.readProfile();
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/logout")
+    public void logout(){
     }
 
     @GetMapping("/read/{id}")

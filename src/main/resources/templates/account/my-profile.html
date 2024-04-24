@@ -10,15 +10,45 @@
 </head>
 <body>
 <h1>마이페이지</h1>
-<h2>[[${account.name}]]님</h2>
-<div>
-    <h3>회원 정보</h3>
-    <p>이름: [[${account.name}]]</p>
-    <p>email: [[${account.email}]]</p>
-</div>
-
-<a href="/profile/ord-list">사용자 주문 확인하기</a>
+<a href="/my-profile/update">프로필 수정하기</a>
 <hr>
+<div id="profile">
+    <!-- 프로필 정보가 여기에 표시됩니다 -->
+</div>
 <a href="/account/logout">로그아웃</a>
+<script>
+    $(document).ready(function () {
+        // 로그인 페이지에서 저장한 토큰을 가져옴
+        const token = localStorage.getItem("CMToken");
+        console.log(token);
+        const headers = {};
+
+        // 토큰이 있으면 헤더에 추가
+        if (token) {
+            headers["Authorization"] = "Bearer " + token; // 토큰을 Authorization 헤더에 담아 전달
+        }
+
+        // 서버에 토큰을 전달하여 프로필 정보 요청
+        $.ajax({
+            type: "GET",
+            url: `/api/account/profile`,
+            headers: headers,
+            contentType: "application/json",
+            success: function (account) {
+                const accountId = account.id;
+                console.log(accountId)
+
+                $('#profile').html(`
+                    <h2>${account.name}님 반갑습니다.</h2>
+                    <p>ID: ${account.username}</p>
+                    <p>Email: ${account.email}</p>`
+                );
+            },
+            error: function (xhr, status, error) {
+                console.error("프로필 정보를 가져오는 중 오류가 발생했습니다: " + error);
+            }
+        });
+    });
+</script>
 </body>
 </html>

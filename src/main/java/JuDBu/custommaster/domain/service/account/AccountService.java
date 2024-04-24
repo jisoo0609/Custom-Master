@@ -31,32 +31,16 @@ public class AccountService {
         return AccountDto.fromEntity(account);
     }
 
+    public AccountDto readProfile(){
+        Account account = authFacade.getAccount();
+        return  AccountDto.fromEntity(account);
+    }
+
     public AccountDto delete(Long id){
         Account account = accountRepo.findById(id).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         accountRepo.deleteById(id);
-        return AccountDto.fromEntity(account);
-    }
-
-    // 유저 정보 가져오기
-    public AccountDto readOneAccount() {
-        Account account = authFacade.getAccount();
-
-        log.info("auth user: {}", authFacade.getAuth().getName());
-        log.info("page username: {}", account.getUsername());
-
-        // 토큰으로 접근 시도한 유저와, 페이지의 유저가 다른경우 예외
-        if (!authFacade.getAuth().getName().equals(account.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        return AccountDto.fromEntity(account);
-    }
-
-    public AccountDto readOneAccount(Long id) {
-        Account account = accountRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return AccountDto.fromEntity(account);
     }
 
