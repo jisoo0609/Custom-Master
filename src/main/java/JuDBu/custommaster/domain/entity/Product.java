@@ -23,8 +23,16 @@ public class Product {
     private String name;
     private Integer exPrice;
     private String exImage;
-    private Integer resultPrice;
-    private Integer quantity;
+    private Integer resultPrice; // 상품의 최종 가격을 상품에 등록할 필요가 있을까?
+    private Integer quantity; // 커스텀 상품의 수량이 필요 있을까?
+
+    public static Product createProduct(String name, Integer exPrice, String exImage) {
+        return Product.builder()
+                .name(name)
+                .exImage(exImage)
+                .exImage(exImage)
+                .build();
+    }
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package JuDBu.custommaster.domain.service;
 
+import JuDBu.custommaster.domain.dto.product.ProductCreateDto;
 import JuDBu.custommaster.domain.dto.product.ProductDto;
 import JuDBu.custommaster.domain.entity.Product;
 import JuDBu.custommaster.domain.repo.ProductRepo;
@@ -42,5 +43,16 @@ public class ProductService {
         return productRepository.findById(id)
                 .map(ProductDto::fromEntity)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public void createProduct(ProductCreateDto createDto) {
+
+        //TODO: 상품에 대한 검증 추가 필요
+
+        Product product = Product.createProduct(createDto.getName(), createDto.getExPrice(), createDto.getExImage());
+        log.info("product={}", product);
+
+        Product savedProduct = productRepository.save(product);
+        log.info("savedProduct={}", savedProduct);
     }
 }

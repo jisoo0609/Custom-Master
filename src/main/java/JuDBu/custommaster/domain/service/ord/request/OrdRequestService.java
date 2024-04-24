@@ -5,7 +5,6 @@ import JuDBu.custommaster.domain.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Product;
 import JuDBu.custommaster.domain.entity.Shop;
-import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.repo.OrdRepo;
 import JuDBu.custommaster.domain.repo.ProductRepo;
 import JuDBu.custommaster.domain.repo.ShopRepository;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +21,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrdRequestService {
 
     private final OrdRepo ordRepo;
