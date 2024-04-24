@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>상품 추가하기</title>
+  <title>상품 수정하기</title>
   <style>
       /* body 요소에 대한 스타일링 */
       body {
@@ -79,8 +79,8 @@
 </head>
 <body>
 <div class="centered-content">
-  <h1 class="title">상품 추가하기</h1>
-  <form action="#" th:action method="POST" enctype="multipart/form-data" th:object="${createDto}">
+  <h1 class="title">상품 수정하기</h1>
+  <form action="#" th:action method="POST" enctype="multipart/form-data" th:object="${updateDto}">
 
     <div>
       <label for="name">이름:</label>
@@ -96,10 +96,10 @@
 
     <div>
       <label for="exImage">예시 이미지:</label>
-      <input type="file" id="exImage" name="exImage" accept="image/*" required>
+      <input type="file" id="exImage" name="exImage" accept="image/*">
     </div>
 
-    <input type="submit" value="추가하기">
+    <input type="submit" value="수정하기">
   </form>
   <form th:action="@{|/shop/${shopId}|}">
     <input type="submit" value="뒤로가기">

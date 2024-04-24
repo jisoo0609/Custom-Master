@@ -76,6 +76,7 @@ public class ShopService {
         //hasShopAccount(findShop, account);
 
         findShop.updateShop(updateDto.getName(), updateDto.getAddress(), updateDto.getPhoneNumber());
+
         return findShop.getId();
     }
 

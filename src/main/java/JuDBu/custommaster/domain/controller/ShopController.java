@@ -49,6 +49,8 @@ public class ShopController {
             return "shop/shop-create-form";
         }
 
+        //TODO: 상점의 이름, 주소, 전화번호가 중복되지 않은지 검증 추가
+
         log.info("shopCreateDto = {}", createDto);
         Long shopId = shopService.createShop(createDto);
         redirectAttributes.addAttribute("shopId", shopId);
