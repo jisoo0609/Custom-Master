@@ -41,8 +41,8 @@ public class JwtTokenUtils {
         Key tokenKey = null;
 
         if(type.equals("accessToken")) {
-            // 유효기간 한달
-            validity = 60 * 60 * 24 *30L;
+            // 유효기간 30s
+            validity = 60 * 60 * 24 * 30L;
             tokenKey = accessSigningKey;
         }
         else{
@@ -92,6 +92,17 @@ public class JwtTokenUtils {
     public boolean validateAccess(String token) {
         jwtParser = Jwts.parserBuilder()
                 .setSigningKey(accessSigningKey)
+                .build();
+
+        jwtParser.parseClaimsJws(token);
+        return true;
+
+    }
+
+    // 정상적인 JWT인지를 판단하는 메서드
+    public boolean validateRefresh(String token) {
+        jwtParser = Jwts.parserBuilder()
+                .setSigningKey(refreshSigningKey)
                 .build();
         try {
             jwtParser.parseClaimsJws(token);

@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 </head>
@@ -11,25 +10,35 @@
 <main class="flex-shrink-0">
     <section class="py-5">
         <div class="container px-5">
-            <!-- login form-->
             <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
                 <div class="row gx-5 justify-content-center">
                     <div class="col-lg-8 col-xl-6">
-                        <h1 class="text-center mb-5">로그인</h1>
-                        <form action="/account/login" method="POST">
+                        <h1 class="text-center mb-5">회원가입</h1>
+                        <form action="/account/register" method="POST">
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="username" name="username" type="text" placeholder="Enter your username...">
                                 <label for="username">ID</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="password" name="password" type="password" placeholder="Enter your password...">
+                                <input class="form-control" id="password" name="password" type="text" placeholder="Enter your password...">
                                 <label for="password">Password</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="passwordCheck" name="passwordCheck" type="text" placeholder="Check your password">
+                                <label for="passwordCheck">Password Check</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="name" name="name" type="text" placeholder="Enter name">
+                                <label for="name">Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="email" name="email" type="text" placeholder="Enter email">
+                                <label for="email">Email</label>
                             </div>
                             <div class="d-grid"><button class="btn btn-primary btn-lg" id="sign-in-button" type="submit">Submit</button></div>
                         </form>
                         <div style="margin-top: 16px; text-align: right">
-                            <a href="/account/register">일반 회원가입</a>
-                            <a href="/account/business-register">사업자 회원가입</a>
+                            <a href="/account/login">로그인으로 돌아가기</a>
                         </div>
                     </div>
                 </div>
@@ -37,7 +46,6 @@
         </div>
     </section>
 </main>
-</body>
 <script>
     $(document).ready(function() {
         $('form').submit(function(event) {
@@ -47,40 +55,28 @@
             // 폼 데이터를 JSON 객체로 변환
             const formData = {
                 username: $('input[name="username"]').val(),
-                password: $('input[name="password"]').val()
+                password: $('input[name="password"]').val(),
+                passwordCheck: $('input[name="passwordCheck"]').val(),
+                name: $('input[name="name"]').val(),
+                email: $('input[name="email"]').val(),
             };
-
-            // AJAX 요청
             $.ajax({
                 type: "POST",
-                url: "/api/account/login",
+                url: "/api/account/register",
                 contentType: "application/json",
 
                 data: JSON.stringify(formData),
-                success: function(data) {
-                    // 로그인 성공 시 로직 (예: 페이지 리다이렉트)
-                    const token = data.accessToken;
-
-                    // 토큰 값이 정상적으로 반환되었는지 확인
-                    if (token) {
-                        // jwt 토큰을 프론트에서 저장함
-                        localStorage.setItem("CMToken", token);
-                        console.log("로그인 성공", token);
-                        location.href = "/account/profile";
-
-                    } else {
-                        alert("아이디나 비밀번호가 일치하지 않습니다.");
-                        console.log("토큰이 반환되지 않았습니다.");
-                        // 토큰 값이 없는 경우에 대한 처리 로직을 추가할 수 있습니다.
-                    }
+                success: function() {
+                    location.href = "/account/login"
                 },
                 error: function(xhr, status, error) {
-                    // 로그인 실패 시 로직
                     console.log("로그인 실패", xhr.responseText);
-                    alert("아이디나 비밀번호가 일치하지 않습니다.")
+                    alert("회원가입에 실패했습니다..")
                 }
             });
         });
+
     });
 </script>
+</body>
 </html>

@@ -38,6 +38,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	//RestTemplate
+	implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+
 
 	//sqlite, h2 database
 	implementation 'org.xerial:sqlite-jdbc:3.41.2.2'

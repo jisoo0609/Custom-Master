@@ -10,9 +10,13 @@
 </head>
 <body>
 <h1>마이페이지</h1>
-<a href="/my-profile/update">프로필 수정하기</a>
+<a href="/account/update">프로필 수정하기</a>
+<a href="/account/mail-auth">이메일 인증하기</a>
 <hr>
 <div id="profile">
+    <!-- 프로필 정보가 여기에 표시됩니다 -->
+</div>
+<div id="mailauth">
     <!-- 프로필 정보가 여기에 표시됩니다 -->
 </div>
 <a href="/account/logout">로그아웃</a>
@@ -37,11 +41,20 @@
             success: function (account) {
                 const accountId = account.id;
                 console.log(accountId)
-
+                const auth = account.authority;
+                let authmsg = '';
+                if((auth != "ROLE_INACTIVE_USER")&&(auth))
+                    authmsg = "메일인증 완료";
+                else
+                    authmsg = "메일인증 미완료"
                 $('#profile').html(`
                     <h2>${account.name}님 반갑습니다.</h2>
                     <p>ID: ${account.username}</p>
                     <p>Email: ${account.email}</p>`
+                );
+                $('#mailauth').html(`
+                    <p>${authmsg}</p>`
+
                 );
             },
             error: function (xhr, status, error) {
