@@ -66,17 +66,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // 1. Authorization 헤더를 회수
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authHeader: {}",authHeader);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//        if (authHeader != null && authHeader.startsWith("Bearer "))
+//        {
+//
+//            if(skipFilterForUrl(request)){
+//                log.info("skip");
+//                filterChain.doFilter(request, response);
+//                return;
+//            };
+        if (refreshToken != null)
+        {
 
             if(skipFilterForUrl(request)){
                 log.info("skip");
                 filterChain.doFilter(request, response);
                 return;
             };
-            String accessToken = authHeader.split(" ")[1];
+            String accessToken = refreshToken;
             log.info("accesstoken");
             try{
-                jwtTokenUtils.validateAccess(accessToken);
+                jwtTokenUtils.validateRefresh(accessToken);
 
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
