@@ -5,12 +5,15 @@ import JuDBu.custommaster.domain.dto.account.CustomAccountDetails;
 import JuDBu.custommaster.domain.entity.account.Authority;
 import JuDBu.custommaster.domain.service.account.AccountService;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.Banner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,16 +23,38 @@ import java.io.IOException;
 @RequestMapping("/account")
 @RequiredArgsConstructor
 public class AccountController {
-    private final UserDetailsManager manager;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/register")
-    public String registerForm() {
+    public String registerForm(
+            HttpServletRequest request,
+            Model model
+    ) {
         return "account/register";
     }
 
+    @GetMapping("/business-register")
+    public String businessRegisterForm(
+            HttpServletRequest request,
+            Model model
+    ) {
+        return "account/business-register";
+    }
+
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(
+            HttpServletRequest request,
+            Model model
+    ) {
+        String referer = request.getHeader("REFERER");
+        log.info("referer:{}",referer);
+        if(referer.contains("logout")) {
+            referer = "/shop";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"").append(referer).append("\"");
+        referer = sb.toString();
+        log.info("referer:{}",referer);
+        model.addAttribute("referer",referer);
         return "account/login-form";
     }
 
