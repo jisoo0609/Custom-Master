@@ -90,3 +90,4 @@
 Github Repository URL: https://github.com/likelion-backend-8th-pj2-team4-JuDBu/Custom-Master
 
 - 필수) 팀원들과 함께 찍은 인증샷(온라인 만남시 스크린 캡쳐)도 함께 업로드 해주세요 🙂
+<img width="241" alt="Untitled" src="https://github.com/likelion-backend-8th-pj2-team4-JuDBu/Custom-Master/assets/70869505/38a288d2-773b-4f7b-a52a-d177cb14faa2">
