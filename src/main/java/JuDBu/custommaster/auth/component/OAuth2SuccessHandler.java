@@ -66,7 +66,7 @@ public class OAuth2SuccessHandler
         String token = tokenUtils.generateToken(details, "accessToken");
         log.info("Token: {}", token);
 
-        Cookie cookie = new Cookie("jwtToken", token);
+        Cookie cookie = new Cookie("CMToken", token);
         cookie.setHttpOnly(false);
         cookie.setPath("/");
         response.addCookie(cookie);

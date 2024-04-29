@@ -41,7 +41,7 @@ public class JwtTokenUtils {
         Key tokenKey = null;
 
         if(type.equals("accessToken")) {
-            // 유효기간 30s
+            // 유효기간 30일
             validity = 60 * 60 * 24 * 30L;
             tokenKey = accessSigningKey;
         }

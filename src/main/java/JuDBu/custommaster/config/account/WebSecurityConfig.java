@@ -4,6 +4,7 @@ import JuDBu.custommaster.auth.component.OAuth2SuccessHandler;
 import JuDBu.custommaster.auth.jwt.JwtExceptionFilter;
 import JuDBu.custommaster.auth.jwt.JwtTokenFilter;
 import JuDBu.custommaster.auth.jwt.JwtTokenUtils;
+import JuDBu.custommaster.domain.entity.account.Authority;
 import JuDBu.custommaster.domain.service.account.OAuth2UserServiceImpl;
 import JuDBu.custommaster.domain.service.account.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,107 @@ public class WebSecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                                 .permitAll()
+                                // form
+                                .requestMatchers(
+                                        "/account/login",
+                                        "/account/register",
+                                        "/account/business-register",
+                                        "/account/logout",
+                                        "/account/profile",
+                                        "/api/account/profile",
+                                        "/account/update",
+                                        "/account/mail-auth"
+                                ).permitAll()
+                                // 로그인, 회원가입
+                                .requestMatchers(
+                                        "/api/account/login",
+                                        "/api/account/register",
+                                        "/api/account/business-register"
+                                ).anonymous()
+                                // 로그아웃
+                                // 프로필, 유저정보 수정
+                                .requestMatchers(
+                                        "/api/account/logout",
+                                        "/api/account/update"
+                                ).authenticated()
+                                // 메일 인증
+                                .requestMatchers(
+                                        "/api/account/send-mail",
+                                        "/api/account/check-mail"
+                                ).hasAnyAuthority(Authority.ROLE_INACTIVE_USER.getAuthority())
+
+                                // 주문 요청 승락/거절
+                                .requestMatchers(
+                                        "/order-accept/{shopId}/read-all",
+                                        "/order-accept/{shopId}/read/{ordId}",
+                                        "/order-accpet/{shopId}/accept/{ordId}",
+                                        "/order-accept/{shopId}/delete/{ordId}"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
+                                )
+                                // Review CUD
+                                .requestMatchers(
+                                        "/review/{shopId}/create",
+                                        "/review/{shopId}/create-view",
+                                        "/review/{shopId}/update/{reviewId}",
+                                        "/review/{shopId}/delete/{reviewId}"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
+                                )
+                                // Read Review
+                                .requestMatchers(
+                                        "/review/{shopId}/read-all",
+                                        "/review/{shopId}/read/{reviewId}"
+                                ).permitAll()
+
+                                // toss
+                                .requestMatchers(
+                                        "/toss/confirm-payment/{ordId}"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
+                                )
+                                // 사용자 주문 확인
+                                .requestMatchers(
+                                        "/profile/ord-list",
+                                        "/profile/read/{ordId}"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
+                                )
+                                .requestMatchers(
+                                        "/{shopId}/{productId}/request" // GET, POST
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                )
+
+                                // Shop CUD
+                                .requestMatchers(
+                                        "/shop/create",
+                                        "/shop/{shopId}/update",
+                                        "/shop/{shopId}/delete"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                )
+                                // Read
+                                .requestMatchers(
+                                        "/shop",
+                                        "/shop/{shopId}"
+                                ).permitAll()
+                                // Product CUD
+                                .requestMatchers(
+                                        "/shop/{shopId}/product/create",
+                                        "/shop/{shopId}/product/{productId}/update",
+                                        "/shop/{shopId}/product/{productId}/delete"
+                                ).hasAnyAuthority(
+                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                )
                                 .anyRequest()
                                 .permitAll()
                 )
@@ -52,7 +154,6 @@ public class WebSecurityConfig {
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService))
-
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/account/logout")

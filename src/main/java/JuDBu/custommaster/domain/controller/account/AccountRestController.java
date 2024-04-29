@@ -14,6 +14,7 @@ import JuDBu.custommaster.auth.jwt.dto.JwtResponseDto;
 import JuDBu.custommaster.domain.service.account.MailService;
 import JuDBu.custommaster.domain.service.account.TokenService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,26 @@ public class AccountRestController {
     private final TokenService tokenService;
 
     @PostMapping("/business-register")
-    public JwtResponseDto businessRegister(){
-        return null;
+    public String businessRegister(
+            @RequestBody
+            AccountDto dto
+    ){
+        log.info("on register");
+        log.info("register username: {}",dto.getUsername());
+        log.info("password: {}",dto.getPassword());
+        log.info("check: {}",dto.getPasswordCheck());
+        if (dto.getPassword().equals(dto.getPasswordCheck())) {
+            manager.createUser(CustomAccountDetails.builder()
+                    .username(dto.getUsername())
+                    .password(passwordEncoder.encode(dto.getPassword()))
+                    .name(dto.getName())
+                    .email(dto.getEmail())
+                    .authority(Authority.ROLE_INACTIVE_USER)
+                    .businessNumber(dto.getBusinessNumber())
+                    .build());
+        }
+        log.info("register done");
+        return "register done";
     }
 
     @PostMapping("/register")
@@ -92,8 +111,8 @@ public class AccountRestController {
 
     @GetMapping("/profile")
     public ResponseEntity<AccountDto> profile(){
-        AccountDto dto = accountService.readProfile();
-        return ResponseEntity.ok().body(dto);
+        AccountDto account = accountService.readProfile();
+        return ResponseEntity.ok().body(account);
     }
 
     @PostMapping("/logout")
