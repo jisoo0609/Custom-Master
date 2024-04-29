@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                                 // form
                                 .requestMatchers(
                                         "/account/login",
+                                        "/api/account/login",
                                         "/account/register",
                                         "/account/business-register",
                                         "/account/logout",
@@ -58,7 +59,6 @@ public class WebSecurityConfig {
                                 ).permitAll()
                                 // 로그인, 회원가입
                                 .requestMatchers(
-                                        "/api/account/login",
                                         "/api/account/register",
                                         "/api/account/business-register"
                                 ).anonymous()
@@ -160,7 +160,7 @@ public class WebSecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/account/logout")
-                        .logoutSuccessUrl("/account/login")
+                        .logoutSuccessUrl("/shop")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID", "CMToken")
