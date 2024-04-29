@@ -24,6 +24,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AccountController {
 
+    @GetMapping("header")
+    public String header(){
+        return "account/header-test";
+    }
     @GetMapping("/register")
     public String registerForm(
             HttpServletRequest request,

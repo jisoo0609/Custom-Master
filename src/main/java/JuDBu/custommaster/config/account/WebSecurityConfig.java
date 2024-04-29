@@ -66,7 +66,8 @@ public class WebSecurityConfig {
                                 // 프로필, 유저정보 수정
                                 .requestMatchers(
                                         "/api/account/logout",
-                                        "/api/account/update"
+                                        "/api/account/update",
+                                        "account/header"
                                 ).authenticated()
                                 // 메일 인증
                                 .requestMatchers(
@@ -78,7 +79,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(
                                         "/order-accept/{shopId}/read-all",
                                         "/order-accept/{shopId}/read/{ordId}",
-                                        "/order-accpet/{shopId}/accept/{ordId}",
+                                        "/order-accept/{shopId}/accept/{ordId}",
                                         "/order-accept/{shopId}/delete/{ordId}"
                                 ).hasAnyAuthority(
                                         Authority.ROLE_BUSINESS_USER.getAuthority(),
@@ -106,6 +107,7 @@ public class WebSecurityConfig {
                                         "/toss/confirm-payment/{ordId}"
                                 ).hasAnyAuthority(
                                         Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
                                         Authority.ROLE_ADMIN.getAuthority()
                                 )
                                 // 사용자 주문 확인
@@ -114,6 +116,7 @@ public class WebSecurityConfig {
                                         "/profile/read/{ordId}"
                                 ).hasAnyAuthority(
                                         Authority.ROLE_ACTIVE_USER.getAuthority(),
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
                                         Authority.ROLE_ADMIN.getAuthority()
                                 )
                                 .requestMatchers(
