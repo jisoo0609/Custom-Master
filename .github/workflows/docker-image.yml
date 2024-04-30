@@ -17,4 +17,4 @@ jobs:
       - name: Build the Dokcer Image
         env:
           TAG: ${{ steps.image-tag.outputs.TAG }}
-        run: docker build . --file Dockerfile --tag "jisoo0609/custom-master:$TAG"
+        run: docker build . --file Dockerfile --tag "jisoo0609/custom-master:$TAG" .
