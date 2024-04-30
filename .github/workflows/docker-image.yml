@@ -13,8 +13,7 @@ jobs:
       - name: Set Image Tag
         id: image-tag
         run: echo "TAG=$(date +%s)-ci" >> "$GITHUB_OUTPUT"
-      # Docker Build 진행
-      - name: Build the Dokcer Image
+      - name: Build the Docker Image
         env:
           TAG: ${{ steps.image-tag.outputs.TAG }}
-        run: docker build . --file Dockerfile --tag "jisoo0609/custom-master:$TAG" .
+        run: docker build --file Dockerfile --tag "jisoo0609/custom-master:$TAG" .
