@@ -59,6 +59,19 @@
             <p th:text="${ord.getOrdTime()}" style="margin: 0 10px 0 0; width: 100px;"></p>
             <p th:text="${ord.getStatus()}" style="margin: 0;"></p>
         </div>
+        <!-- body 하단에 read-one.html 처럼 script 추가한다고 가정 -->
+        <div th:if="${ord.status.toString() == 'CONFIRMED'}">
+            <p th:text="${ord.totalPrice}" style="margin: 0 10px 0 0; width: 100px;"></p>
+            <div class="col-lg-6 p-3">
+                <div id="payment-wrapper">
+                    <div id="payment-method"></div>
+                    <div id="agreement"></div>
+                    <div class="p-3 w-100">
+                        <button id="payment-request-button" class="btn btn-primary w-100">결제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 페이지 -->
