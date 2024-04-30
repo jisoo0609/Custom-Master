@@ -110,9 +110,9 @@
 
   <!-- 주문 확인하기 수정 및 삭제 버튼 -->
   <div class="edit-delete-buttons">
-    <button class="edit-button">
-      <a th:href="@{/order-accept/${shopId}/read-all}">주문 확인하기</a>
-    </button>
+    <form th:action="@{|/order-accept/${shopId}/read-all|}" >
+      <button type="submit" class="edit-button">주문 확인하기</button>
+    </form>
     <form th:action="@{|/shop/${shopId}/update|}" method="get">
       <button type="submit" class="edit-button">수정</button>
     </form>

@@ -190,7 +190,6 @@ public class OrdAcceptService {
                 .orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("shop Account: {}", shop.getAccount().getUsername());
 
-        // 매장 주인이면 true
-        return shop.getAccount().equals(account);
+        return !shop.getAccount().equals(account);
     }
 }
