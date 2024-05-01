@@ -58,7 +58,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if(cookies != null){
             for(Cookie c : cookies){
                 if (c.getName().equals("CMToken")){
-                    log.info("cookie value: {}", c.getValue());
                     refreshToken = c.getValue();
                 }
             }
@@ -66,32 +65,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // 1. Authorization 헤더를 회수
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authHeader: {}",authHeader);
-//        if (authHeader != null && authHeader.startsWith("Bearer "))
-//        {
-//
-//            if(skipFilterForUrl(request)){
-//                log.info("skip");
-//                filterChain.doFilter(request, response);
-//                return;
-//            };
-        if (refreshToken != null)
+        if (authHeader != null && authHeader.startsWith("Bearer "))
         {
-
+            String accessToken = authHeader.split(" ")[1];
             if(skipFilterForUrl(request)){
                 log.info("skip");
                 filterChain.doFilter(request, response);
                 return;
             };
-            String accessToken = refreshToken;
+            String token = accessToken;
             log.info("accesstoken");
+            log.info("token value: {}",token);
             try{
-                jwtTokenUtils.validateRefresh(accessToken);
+                jwtTokenUtils.validateAccess(token);
 
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
 
                 String username = jwtTokenUtils
-                        .parseClaims(accessToken)
+                        .parseClaims(token)
                         .getSubject();
 
                 log.info("username: {}",username);
@@ -104,7 +96,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 AbstractAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
-                                accessToken,
+                                token,
                                 userDetails.getAuthorities()
                         );
                 // 인증 정보 등록
@@ -124,6 +116,52 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 throw new JwtException("5");
             }
 
+        }
+        else if(authHeader == null){
+            if (refreshToken != null){
+                String token = refreshToken;
+                log.info("refreshtoken");
+                log.info("token value: {}",token);
+                try{
+                    jwtTokenUtils.validateRefresh(token);
+
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+
+
+                    String username = jwtTokenUtils
+                            .parseClaims(token)
+                            .getSubject();
+
+                    log.info("username: {}",username);
+                    UserDetails userDetails = manager.loadUserByUsername(username);
+                    for (GrantedAuthority authority :userDetails.getAuthorities()) {
+                        log.info("authority: {}", authority.getAuthority());
+                    }
+
+                    // 인증 정보 생성
+                    AbstractAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    token,
+                                    userDetails.getAuthorities()
+                            );
+                    // 인증 정보 등록
+                    context.setAuthentication(authentication);
+                    SecurityContextHolder.setContext(context);
+                    log.info("set security context with jwt");
+                }
+                catch (ExpiredJwtException e){
+                    throw new JwtException("1");
+                }catch (UnsupportedJwtException e){
+                    throw new JwtException("2");
+                }catch (MalformedJwtException e){
+                    throw new JwtException("3");
+                }catch (SignatureException e){
+                    throw new JwtException("4");
+                } catch (IllegalArgumentException e){
+                    throw new JwtException("5");
+                }
+            }
         }
         filterChain.doFilter(request, response);
     }

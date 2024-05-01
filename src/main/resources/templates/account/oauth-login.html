@@ -22,17 +22,24 @@
             }
             return cookieValue;
         }
+        const url = new URL(window.location.href);
+        console.log(url)
+        const urlParams = url.searchParams;
+        const accessToken = urlParams.get('token');
 
-        // 'auth_token' 쿠키의 값을 localStorage에 저장
-        const jwtToken = getCookie('jwtToken');
-        if (jwtToken) {
-            localStorage.setItem('jwtToken', jwtToken);
-            console.log(jwtToken);
+        if(accessToken){
+            localStorage.setItem('CMToken',accessToken);
+        }
 
-            location.href = '/my-profile';
+        // 쿠키의 값을 localStorage에 저장
+        const CMToken = getCookie('CMToken');
+        if (CMToken) {
+            localStorage.setItem('CMToken', CMToken);
+            console.log(CMToken);
         } else {
             console.log('No JWT token found in cookies');
         }
+        location.href = '/shop';
     });
 </script>
 </body>
