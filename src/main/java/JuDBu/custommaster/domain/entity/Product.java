@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 @Slf4j
 @Entity
 @AllArgsConstructor
@@ -39,6 +41,19 @@ public class Product {
         this.name = name;
         this.exPrice = exPrice;
         this.exImage = exImage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product that = (Product) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getShop(), that.getShop()) && Objects.equals(getName(), that.getName()) && Objects.equals(getExPrice(), that.getExPrice()) && Objects.equals(getExImage(), that.getExImage()) && Objects.equals(getResultPrice(), that.getResultPrice()) && Objects.equals(getQuantity(), that.getQuantity());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getShop(), getName(), getExPrice(), getExImage(), getResultPrice(), getQuantity());
     }
 
     @Override

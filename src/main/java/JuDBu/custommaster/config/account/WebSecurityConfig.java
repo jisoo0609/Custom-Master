@@ -119,23 +119,24 @@ public class WebSecurityConfig {
                                         Authority.ROLE_BUSINESS_USER.getAuthority(),
                                         Authority.ROLE_ADMIN.getAuthority()
                                 )
+                                // 사용자 주문 요청
                                 .requestMatchers(
                                         "/{shopId}/{productId}/request" // GET, POST
                                 ).hasAnyAuthority(
                                         Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
                                 )
-
                                 // Shop CUD
                                 .requestMatchers(
                                         "/shop/create",
                                         "/shop/{shopId}/update",
                                         "/shop/{shopId}/delete"
                                 ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
                                 )
-                                // Read
+                                // Shop Read
                                 .requestMatchers(
                                         "/shop",
                                         "/shop/{shopId}"
@@ -146,8 +147,8 @@ public class WebSecurityConfig {
                                         "/shop/{shopId}/product/{productId}/update",
                                         "/shop/{shopId}/product/{productId}/delete"
                                 ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
+                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
+                                        Authority.ROLE_ADMIN.getAuthority()
                                 )
                                 .anyRequest()
                                 .permitAll()

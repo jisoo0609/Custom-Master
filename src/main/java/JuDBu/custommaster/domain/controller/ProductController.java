@@ -4,6 +4,7 @@ import JuDBu.custommaster.domain.dto.product.ProductCreateDto;
 import JuDBu.custommaster.domain.dto.product.ProductDto;
 import JuDBu.custommaster.domain.dto.product.ProductUpdateDto;
 import JuDBu.custommaster.domain.service.ProductService;
+import JuDBu.custommaster.domain.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -24,6 +24,7 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final ShopService shopService;
 
     // 상품에 대한 정보 입력 폼
     @GetMapping("create")
@@ -31,11 +32,9 @@ public class ProductController {
             @ModelAttribute("createDto")
             ProductCreateDto createDto,
             @PathVariable("shopId")
-            Long shopId,
-            Model model
+            Long shopId
     ) {
-        //TODO 인증된 사용자 정보 확인
-        model.addAttribute("shopId", shopId);
+        shopService.findAccountShop(shopId);
         return "product/product-create-form";
     }
 
@@ -75,7 +74,7 @@ public class ProductController {
             Long shopId,
             Model model
     ) {
-        ProductUpdateDto productDto = productService.findProduct(productId);
+        ProductUpdateDto productDto = productService.findProduct(shopId, productId);
         model.addAttribute("shopId", shopId);
         model.addAttribute("updateDto", productDto);
         return "product/product-update-form";
@@ -108,7 +107,7 @@ public class ProductController {
         return "redirect:/shop/{shopId}";
     }
 
-    // 상점 삭제
+    // 상품 삭제
     @PostMapping("{productId}/delete")
     public String delete(
             @PathVariable("productId")
@@ -117,7 +116,7 @@ public class ProductController {
             Long shopId,
             RedirectAttributes redirectAttributes
     ) {
-        productService.deleteProduct(productId);
+        productService.deleteProduct(shopId, productId);
         redirectAttributes.addAttribute("shopId", shopId);
         return "redirect:/shop/{shopId}";
     }

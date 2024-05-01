@@ -2,8 +2,7 @@ package JuDBu.custommaster.domain.controller.ord.request;
 
 import JuDBu.custommaster.domain.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.domain.dto.product.ProductDto;
-import JuDBu.custommaster.domain.entity.Product;
-import JuDBu.custommaster.domain.entity.Shop;
+import JuDBu.custommaster.domain.dto.shop.ShopReadDto;
 import JuDBu.custommaster.domain.service.ProductService;
 import JuDBu.custommaster.domain.service.ShopService;
 import JuDBu.custommaster.domain.service.ord.request.OrdRequestService;
@@ -35,10 +34,11 @@ public class OrdRequestController {
             Model model
     ) {
         // TODO: 상점과 상품에 대한 검증 필요
-        shopService.readOne(shopId);
-        ProductDto productDto = productService.readOne(productId);
+        ShopReadDto shopReadDto = shopService.readOne(shopId);
 
+        ProductDto productDto = productService.readOne(productId);
         model.addAttribute("product", productDto);
+
         return "ord/order-form";
     }
 
@@ -51,10 +51,15 @@ public class OrdRequestController {
             OrdRequestDto requestDto,
             BindingResult bindingResult,
             @RequestParam("exImage") MultipartFile exImage,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult.getAllErrors());
+
+            ProductDto productDto = productService.readOne(productId);
+            model.addAttribute("product", productDto);
+
             return "ord/order-form";
         }
 
@@ -64,7 +69,7 @@ public class OrdRequestController {
 
         redirectAttributes.addAttribute("shopId", shopId);
         redirectAttributes.addAttribute("productId", productId);
-        // TODO 주문 완료 페이지
-        return "redirect:/{shopId}/{productId}/request";
+
+        return "redirect:/profile/ord-list";
     }
 }

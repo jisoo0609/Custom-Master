@@ -29,8 +29,11 @@ public class ShopController {
 
     // 상점에 대한 정보 입력 폼
     @GetMapping("create")
-    public String createForm(@ModelAttribute("createDto") ShopCreateDto createDto) {
-        //TODO 인증된 사용자 정보 확인
+    public String createForm(
+            @ModelAttribute("createDto")
+            ShopCreateDto createDto
+    ) {
+        shopService.hasShop();
         return "shop/shop-create-form";
     }
 
@@ -76,8 +79,6 @@ public class ShopController {
     public String readOne(
             @PathVariable("shopId")
             Long shopId,
-            @PageableDefault(size = 30, sort = "id", direction = Sort.Direction.DESC)
-            Pageable pageable,
             Model model) {
         ShopReadDto readDto = shopService.readOne(shopId);
         model.addAttribute("readDto", readDto);
@@ -86,7 +87,11 @@ public class ShopController {
 
     // 상점 수정 입력 폼
     @GetMapping("{shopId}/update")
-    public String updateForm(@PathVariable("shopId") Long shopId, Model model) {
+    public String updateForm(
+            @PathVariable("shopId")
+            Long shopId,
+            Model model
+    ) {
         ShopDto findShop = shopService.findShop(shopId);
         model.addAttribute("updateDto", findShop);
         return "shop/shop-update-form";
@@ -115,7 +120,9 @@ public class ShopController {
 
     // 상점 삭제
     @PostMapping("{shopId}/delete")
-    public String delete(@PathVariable("shopId") Long shopId) {
+    public String delete(
+            @PathVariable("shopId")
+            Long shopId) {
         shopService.deleteShop(shopId);
         return "redirect:/shop";
     }
