@@ -86,15 +86,20 @@ public class ShopService {
 
         Account account = findAccount();
 
-        Shop findShop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
-        log.info("findShop={}", findShop);
+        Shop findShop = findEntityShop(shopId);
 
         if (!findShop.getAccount().equals(account)) {
             log.error("account가 틀립니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
+        return findShop;
+    }
+
+    public Shop findEntityShop(Long shopId) {
+        Shop findShop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        log.info("findShop={}", findShop);
         return findShop;
     }
 

@@ -64,5 +64,5 @@ public class OrdRequestService {
         // 주문 요청 저장
         Ord savedOrder = ordRepo.save(requestOrder);
         log.info("savedOrder={}", savedOrder);
-    }
+}
 }
