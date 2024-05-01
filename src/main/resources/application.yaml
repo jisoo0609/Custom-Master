@@ -48,7 +48,7 @@ spring:
               - email
               - name
 toss:
-  secret: test_sk_jExPeJWYVQqoZaQge7RpV49R5gvN
+  secret: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6
 ncp:
   api:
     client-id: re2p8027kc
