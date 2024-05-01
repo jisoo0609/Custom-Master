@@ -64,7 +64,7 @@ public class ReviewController {
 
     ) {
         reviewService.updateReview(shopId, reviewId, comment);
-        return "review/update";
+        return "redirect:/review/{shopId}/read/{reviewId}";
     }
 
     @GetMapping("/{shopId}/read-all")
