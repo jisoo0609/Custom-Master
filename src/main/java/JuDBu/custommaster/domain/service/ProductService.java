@@ -62,7 +62,7 @@ public class ProductService {
 
         // 상점에 상품 추가 시, 상점의 주인만이 상품을 추가 할 수 있다.
 
-        Shop findShop = shopService.findEntityShop(shopId);
+        Shop findShop = shopService.findEntity(shopId);
 
         // 예시 이미지 저장
         String exImagePath = getExImagePath(shopId, exImage);
@@ -126,7 +126,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("findProduct={}", findProduct);
 
-        Shop findShop = shopService.findEntityShop(shopId);
+        Shop findShop = shopService.findEntity(shopId);
 
         if (!findShop.getProducts().contains(findProduct)) {
             log.error("상점에 존재하지 않는 상품입니다.");

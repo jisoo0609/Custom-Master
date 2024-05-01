@@ -44,14 +44,7 @@ public class ShopService {
     public Long createShop(ShopCreateDto createDto) {
 
         // 인증된 Account의 정보
-        Account account = findAccount();
-
-        // 인증된 Account가 BusinessAccount 인지
-        if (!account.getAuthority().equals(Authority.ROLE_BUSINESS_USER) && !account.getAuthority().equals(Authority.ROLE_ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        hasShop();
+        Account account = validAccount();
 
         Shop shop = Shop.createShop(account, createDto.getName(), createDto.getAddress(), createDto.getPhoneNumber());
         log.info("createShop={}", shop);
@@ -84,9 +77,9 @@ public class ShopService {
 
     public Shop findAccountShop(Long shopId) {
 
-        Account account = findAccount();
+        Account account = getAccount();
 
-        Shop findShop = findEntityShop(shopId);
+        Shop findShop = findEntity(shopId);
 
         if (!findShop.getAccount().equals(account)) {
             log.error("account가 틀립니다.");
@@ -96,7 +89,7 @@ public class ShopService {
         return findShop;
     }
 
-    public Shop findEntityShop(Long shopId) {
+    public Shop findEntity(Long shopId) {
         Shop findShop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
         log.info("findShop={}", findShop);
@@ -104,9 +97,10 @@ public class ShopService {
     }
 
     // 인증된 Account가 Shop을 가지고 있는지 검증
-    public void hasShop() {
+    public Account validAccount() {
 
-        Account account = findAccount();
+        Account account = getAccount();
+        log.info("account={}", account);
 
         Shop findShop = shopRepository.findByAccount(account);
         log.info("findShop={}", findShop);
@@ -116,9 +110,17 @@ public class ShopService {
             log.error("이미 상점이 존재합니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+        // 인증된 Account가 BusinessAccount 인지
+        if (!account.getAuthority().equals(Authority.ROLE_BUSINESS_USER)) {
+            log.error("사업자가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        return account;
     }
 
-    private Account findAccount() {
+    private Account getAccount() {
         Account account = authenticationFacade.getAccount();
         log.info("account={}", account);
         return account;

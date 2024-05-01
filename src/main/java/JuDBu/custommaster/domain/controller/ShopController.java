@@ -33,7 +33,7 @@ public class ShopController {
             @ModelAttribute("createDto")
             ShopCreateDto createDto
     ) {
-        shopService.hasShop();
+        shopService.validAccount();
         return "shop/shop-create-form";
     }
 
