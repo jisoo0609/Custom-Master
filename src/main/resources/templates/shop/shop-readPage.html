@@ -54,6 +54,10 @@
           padding: 0;
           margin: 20px 0;
           text-align: center;
+          position: fixed;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
       }
       .pagination li {
           display: inline-block;
@@ -147,7 +151,7 @@
       <p>주소: <span th:text="${shop.address}">[[${shop.address}]]</span></p>
       <p>전화번호: <span th:text="${shop.phoneNumber}">[[${shop.phoneNumber}]]</span></p>
       <p>제품 수: <span th:text="${#lists.size(shop.productReadDtos)}">[[${#lists.size(shop.productReadDtos)}]]</span></p>
-      <p><a th:href="@{'shop/' + ${shop.id}}">상세 보기</a></p>
+      <p><a th:href="@{|shop/${shop.id}|}">상세 보기</a></p>
     </div>
   </div>
 
@@ -160,42 +164,44 @@
     </li>
   </ul>
 </div>
-</body>
-<script>
-  $(document).ready(function () {
-    // 로그인 페이지에서 저장한 토큰을 가져옴
-    const token = localStorage.getItem("CMToken");
-    console.log(token);
-    const headers = {};
 
-    // 토큰이 있으면 헤더에 추가
-    if (token) {
-      headers["Authorization"] = "Bearer " + token; // 토큰을 Authorization 헤더에 담아 전달
-      $.ajax({
-        type: "GET",
-        url: `/api/account/profile`,
-        headers: headers,
-        contentType: "application/json",
-        success: function (account) {
-          const accountId = account.id;
-          console.log(accountId)
-          $('#auth').html(`
+</body>
+
+<script>
+    $(document).ready(function () {
+        // 로그인 페이지에서 저장한 토큰을 가져옴
+        const token = localStorage.getItem("CMToken");
+        console.log(token);
+        const headers = {};
+
+        // 토큰이 있으면 헤더에 추가
+        if (token) {
+            headers["Authorization"] = "Bearer " + token; // 토큰을 Authorization 헤더에 담아 전달
+            $.ajax({
+                type: "GET",
+                url: `/api/account/profile`,
+                headers: headers,
+                contentType: "application/json",
+                success: function (account) {
+                    const accountId = account.id;
+                    console.log(accountId)
+                    $('#auth').html(`
                     <p>${account.name}님 반갑습니다.</p>
                     <a href="/account/profile">프로필</a>
                     <a href="/account/logout">로그아웃</a>`
-          );
-        },
-        error: function (xhr, status, error) {
-          console.error("프로필 정보를 가져오는 중 오류가 발생했습니다: " + error);
+                    );
+                },
+                error: function (xhr, status, error) {
+                    console.error("프로필 정보를 가져오는 중 오류가 발생했습니다: " + error);
+                }
+            });
         }
-      });
-    }
-    else {
-      $('#auth').html(`
+        else {
+            $('#auth').html(`
                     <a href="/account/login">로그인하기</a>`
-      );
-    }
-    // 서버에 토큰을 전달하여 프로필 정보 요청
-  });
+            );
+        }
+        // 서버에 토큰을 전달하여 프로필 정보 요청
+    });
 </script>
 </html>

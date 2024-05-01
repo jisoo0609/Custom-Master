@@ -123,6 +123,8 @@ public class WebSecurityConfig {
                                 ).permitAll()
                                 // Product CUD
                                 .requestMatchers(
+                                        "/shop/{shopId}/product/create",
+                                        "/shop/{shopId}/product/{productId}/update",
                                         "/shop/{shopId}/product/{productId}/delete"
                                 ).authenticated()
 

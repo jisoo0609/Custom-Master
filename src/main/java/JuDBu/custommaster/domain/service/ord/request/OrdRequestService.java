@@ -5,6 +5,7 @@ import JuDBu.custommaster.domain.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.domain.entity.Ord;
 import JuDBu.custommaster.domain.entity.Product;
 import JuDBu.custommaster.domain.entity.Shop;
+import JuDBu.custommaster.domain.entity.account.Account;
 import JuDBu.custommaster.domain.repo.OrdRepo;
 import JuDBu.custommaster.domain.repo.ProductRepo;
 import JuDBu.custommaster.domain.repo.ShopRepository;
@@ -44,8 +45,8 @@ public class OrdRequestService {
         log.info("product={}", product);
 
         // TODO: 사용자 조회
-        //Account account = authenticationFacade.getAccount();
-        //log.info("account={}", account);
+        Account account = authenticationFacade.getAccount();
+        log.info("account={}", account);
 
         // 예시 이미지 저장
         String exImagePath = fileHandlerUtils.saveFile(
@@ -57,7 +58,7 @@ public class OrdRequestService {
 
         // 주문 요청 생성
         // TODO: account
-        Ord requestOrder = Ord.createOrd(null, shop, product, requestDto.getPhoneNumber(), requestDto.getPickupDate(), requestDto.getRequirements(), exImagePath);
+        Ord requestOrder = Ord.createOrd(account, shop, product, requestDto.getPhoneNumber(), requestDto.getPickupDate(), requestDto.getRequirements(), exImagePath);
         log.info("requestOrder={}", requestOrder);
 
         // 주문 요청 저장

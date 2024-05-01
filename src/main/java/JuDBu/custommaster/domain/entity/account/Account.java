@@ -3,6 +3,8 @@ package JuDBu.custommaster.domain.entity.account;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Builder
@@ -53,5 +55,18 @@ public class Account {
                 ", businessNumber='" + businessNumber + '\'' +
                 ", authority=" + authority +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(getId(), account.getId()) && Objects.equals(getUsername(), account.getUsername()) && Objects.equals(getPassword(), account.getPassword()) && Objects.equals(getName(), account.getName()) && Objects.equals(getEmail(), account.getEmail()) && Objects.equals(getBusinessNumber(), account.getBusinessNumber()) && getAuthority() == account.getAuthority();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getPassword(), getName(), getEmail(), getBusinessNumber(), getAuthority());
     }
 }

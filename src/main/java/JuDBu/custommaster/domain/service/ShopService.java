@@ -35,27 +35,25 @@ public class ShopService {
 
     // 상점 상세 조회
     public ShopReadDto readOne(Long shopId) {
-        return ShopReadDto.fromEntity(shopRepository.findById(shopId).orElseThrow());
+        return ShopReadDto.fromEntity(shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     // 상점 생성
     @Transactional
     public Long createShop(ShopCreateDto createDto) {
 
-        // TODO: 인증된 사용자 정보 필요
-        //// 인증된 Account가 BusinessAccount 인지
-        //Account account = authenticationFacade.getAccount();
-        //log.info("account={}", account);
-        //if (!account.getAuthority().equals(Authority.ROLE_BUSINESS_USER)) {
-        //    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        //}
-        //
-        //// 인증된 Account의 상점이 없는지
-        //if (shopRepository.findByAccount(account) != null) {
-        //    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        //}
+        // 인증된 Account의 정보
+        Account account = findAccount();
 
-        Shop shop = Shop.createShop(null, createDto.getName(), createDto.getAddress(), createDto.getPhoneNumber());
+        // 인증된 Account가 BusinessAccount 인지
+        if (!account.getAuthority().equals(Authority.ROLE_BUSINESS_USER) && !account.getAuthority().equals(Authority.ROLE_ADMIN)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        hasShop();
+
+        Shop shop = Shop.createShop(account, createDto.getName(), createDto.getAddress(), createDto.getPhoneNumber());
         log.info("createShop={}", shop);
 
         Shop savedShop = shopRepository.save(shop);
@@ -67,48 +65,57 @@ public class ShopService {
     // 상점 정보 수정
     @Transactional
     public Long updateShop(Long shopId, ShopUpdateDto updateDto) {
-        // TODO: 인증된 사용자 정보 필요
-        //Account account = authenticationFacade.getAccount();
-        Shop findShop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        // TODO: 인증된 사용자 정보 필요
-        //hasShopAccount(findShop, account);
-
+        Shop findShop = findAccountShop(shopId);
         findShop.updateShop(updateDto.getName(), updateDto.getAddress(), updateDto.getPhoneNumber());
-
         return findShop.getId();
     }
 
     // 상점 삭제
     @Transactional
     public void deleteShop(Long shopId) {
-        Shop findShop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        // TODO: 인증된 사용자 정보 필요
-        //Account account = authenticationFacade.getAccount();
-
-        // TODO: 인증된 사용자 정보 필요
-        //hasShopAccount(findShop, account);
-
+        findAccountShop(shopId);
         shopRepository.deleteById(shopId);
     }
 
     public ShopDto findShop(Long shopId) {
-        Shop findShop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        // TODO: 인증된 사용자 정보 필요
-        //hasShopAccount(findShop, account);
-
+        Shop findShop = findAccountShop(shopId);
         return ShopDto.fromEntity(findShop);
     }
 
-    private static void hasShopAccount(Shop findShop, Account account) {
-        // 인증된 Account의 상점이 맞는지
-        if (findShop.getAccount().equals(account)) {
+    public Shop findAccountShop(Long shopId) {
+
+        Account account = findAccount();
+
+        Shop findShop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        log.info("findShop={}", findShop);
+
+        if (!findShop.getAccount().equals(account)) {
+            log.error("account가 틀립니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+        return findShop;
+    }
+
+    // 인증된 Account가 Shop을 가지고 있는지 검증
+    public void hasShop() {
+
+        Account account = findAccount();
+
+        Shop findShop = shopRepository.findByAccount(account);
+        log.info("findShop={}", findShop);
+
+        // 인증된 Account의 상점이 없는지
+        if (findShop != null) {
+            log.error("이미 상점이 존재합니다.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private Account findAccount() {
+        Account account = authenticationFacade.getAccount();
+        log.info("account={}", account);
+        return account;
     }
 }

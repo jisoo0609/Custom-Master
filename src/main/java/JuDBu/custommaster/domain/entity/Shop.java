@@ -30,7 +30,7 @@ public class Shop {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.REMOVE)
     private List<Product> products = new ArrayList<>();
 
     public static Shop createShop(Account accountShop, String name, String address, String phoneNumber) {

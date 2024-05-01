@@ -6,7 +6,6 @@ import JuDBu.custommaster.domain.dto.product.ProductUpdateDto;
 import JuDBu.custommaster.domain.entity.Product;
 import JuDBu.custommaster.domain.entity.Shop;
 import JuDBu.custommaster.domain.repo.ProductRepo;
-import JuDBu.custommaster.domain.repo.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +23,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class ProductService {
 
-    private final ShopRepository shopRepository;
+    private final ShopService shopService;
     private final ProductRepo productRepository;
     private final FileHandlerUtils fileHandlerUtils;
 
@@ -61,18 +59,10 @@ public class ProductService {
     @Transactional
     public void createProduct(Long shopId, ProductCreateDto createDto, MultipartFile exImage) {
 
-        //TODO: 상점과 상품에 대한 검증 추가 필요
-
-        Shop findShop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Shop findShop = shopService.findAccountShop(shopId);
 
         // 예시 이미지 저장
-        String exImagePath = fileHandlerUtils.saveFile(
-                String.format("shops/%d/items/", shopId),
-                UUID.randomUUID().toString(),
-                exImage
-        );
-        log.info("exImagePath={}", exImagePath);
+        String exImagePath = getExImagePath(shopId, exImage);
 
         Product product = Product.createProduct(findShop, createDto.getName(), createDto.getExPrice(), exImagePath);
         log.info("product={}", product);
@@ -81,16 +71,10 @@ public class ProductService {
         log.info("savedProduct={}", savedProduct);
     }
 
-    public ProductUpdateDto findProduct(Long productId) {
-        return ProductUpdateDto.fromEntity(productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
-    }
-
     @Transactional
     public void updateProduct(Long shopId, Long productId, ProductUpdateDto updateDto, MultipartFile exImage) {
 
-        Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Product findProduct = shopContainsFindProduct(shopId, productId);
 
         // 수정 이미지가 없는 경우 기존 이미지 경로 추가
         String exImagePath = findProduct.getExImage();
@@ -101,12 +85,7 @@ public class ProductService {
             //fileHandlerUtils.deleteFile(findProduct.getExImage());
 
             // 예시 이미지 저장
-            exImagePath = fileHandlerUtils.saveFile(
-                    String.format("shops/%d/items/", shopId),
-                    UUID.randomUUID().toString(),
-                    exImage
-            );
-            log.info("exImagePath={}", exImagePath);
+            exImagePath = getExImagePath(shopId, exImage);
         }
 
         findProduct.updateProduct(updateDto.getName(), updateDto.getExPrice(), exImagePath);
@@ -114,7 +93,47 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(Long shopId, Long productId) {
+
+        Product findProduct = shopContainsFindProduct(shopId, productId);
+
+        log.info("delete product={}", findProduct);
         productRepository.deleteById(productId);
+    }
+
+    public ProductUpdateDto findProduct(Long shopId, Long productId) {
+
+        // 상점에 속해있는 상품인지 검증
+        Product findProduct = shopContainsFindProduct(shopId, productId);
+
+        return ProductUpdateDto.fromEntity(findProduct);
+    }
+
+    private Product shopContainsFindProduct(Long shopId, Long productId) {
+
+        // 해당 상점과 인증된 유저에 대한 검증
+        Shop findShop = shopService.findAccountShop(shopId);
+
+        Product findProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info("findProduct={}", findProduct);
+
+        if (!findShop.getProducts().contains(findProduct)) {
+            log.error("상점에 존재하지 않는 상품입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return findProduct;
+    }
+
+    private String getExImagePath(Long shopId, MultipartFile exImage) {
+        String exImagePath;
+        exImagePath = fileHandlerUtils.saveFile(
+                String.format("shops/%d/items/", shopId),
+                UUID.randomUUID().toString(),
+                exImage
+        );
+        log.info("exImagePath={}", exImagePath);
+        return exImagePath;
     }
 }
