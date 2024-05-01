@@ -18,15 +18,15 @@
                         <h1 class="text-center mb-5">업데이트</h1>
                         <form action="/account/update" method="POST">
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="password" name="password" type="text" placeholder="Enter your password...">
+                                <input class="form-control" id="password" name="password" type="text" placeholder="바꿀 비밀번호">
                                 <label for="password">Password</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="passwordCheck" name="passwordCheck" type="text" placeholder="Check your password">
+                                <input class="form-control" id="passwordCheck" name="passwordCheck" type="text" placeholder="기존 비밀번호">
                                 <label for="passwordCheck">Password Check</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="email" name="email" type="text" placeholder="Enter your password...">
+                                <input class="form-control" id="email" name="email" type="text" placeholder="바꿀 이메일">
                                 <label for="email">Email</label>
                             </div>
                             <div class="d-grid"><button class="btn btn-primary btn-lg" id="sign-in-button" type="submit">Submit</button></div>
@@ -73,7 +73,7 @@
                 error: function(xhr, status, error) {
                     // 로그인 실패 시 로직
                     console.log("로그인 실패", xhr.responseText);
-                    alert("아이디나 비밀번호가 일치하지 않습니다.")
+                    alert("정보수정에 실패했습니다")
                 }
             });
         });

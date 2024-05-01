@@ -24,10 +24,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AccountController {
 
-    @GetMapping("header")
+    @GetMapping("/header")
     public String header(){
         return "account/header-test";
     }
+
     @GetMapping("/register")
     public String registerForm(
             HttpServletRequest request,
@@ -60,6 +61,11 @@ public class AccountController {
         log.info("referer:{}",referer);
         model.addAttribute("referer",referer);
         return "account/login-form";
+    }
+
+    @GetMapping("/oauth")
+    public String oauth() {
+        return "account/oauth-login";
     }
 
     @GetMapping("/profile")

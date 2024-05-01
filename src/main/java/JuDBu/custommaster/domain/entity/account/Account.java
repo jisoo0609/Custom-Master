@@ -12,13 +12,15 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String username;    // 유저 아이디
     @Column(nullable = false)
     private String password;    // 비밀번호
     @Column(nullable = false)
     private String name;        // 유저 이름
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;       // 이메일
     private String businessNumber;  // 사업자 등록번호
     @Enumerated(EnumType.STRING)

@@ -21,8 +21,11 @@
 <div id="profile">
     <!-- 프로필 정보가 여기에 표시됩니다 -->
 </div>
+<div id="authMsg">
+    <!-- 메일인증 여부 -->
+</div>
 <div id="mailAuth">
-    <!-- 프로필 정보가 여기에 표시됩니다 -->
+    <!-- 메일인증 여부 -->
 </div>
 <a href="/account/logout">로그아웃</a>
 <script>
@@ -50,13 +53,11 @@
                 let authmsg = '';
                 if((auth != "ROLE_INACTIVE_USER")&&(auth))
                 {
-                    $('#profile').html(`
-                    <a href="/account/mail-auth">이메일 인증하기</a>`
-                    );
+                    $('#mailAuth').html();
                     authmsg = "메일인증 완료";
                 }
                 else{
-                    $('#profile').html(`
+                    $('#mailAuth').html(`
                     <a href="/account/mail-auth">이메일 인증하기</a>`
                     );
                     authmsg = "메일인증 미완료"
@@ -66,7 +67,7 @@
                     <p>ID: ${account.username}</p>
                     <p>Email: ${account.email}</p>`
                 );
-                $('#mailAuth').html(`
+                $('#authMsg').html(`
                     <p>${authmsg}</p>`
                 );
             },

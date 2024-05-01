@@ -1,11 +1,9 @@
 package JuDBu.custommaster.domain.controller.account;
 
 import JuDBu.custommaster.auth.facade.AuthenticationFacade;
-import JuDBu.custommaster.auth.jwt.JwtTokenUtils;
 import JuDBu.custommaster.auth.jwt.dto.JwtRequestDto;
 import JuDBu.custommaster.domain.dto.account.MailCode;
 import JuDBu.custommaster.domain.entity.account.Account;
-import JuDBu.custommaster.domain.entity.account.MailAuth;
 import JuDBu.custommaster.domain.service.account.AccountService;
 import JuDBu.custommaster.domain.dto.account.AccountDto;
 import JuDBu.custommaster.domain.dto.account.CustomAccountDetails;
@@ -14,13 +12,11 @@ import JuDBu.custommaster.auth.jwt.dto.JwtResponseDto;
 import JuDBu.custommaster.domain.service.account.MailService;
 import JuDBu.custommaster.domain.service.account.TokenService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -113,6 +109,7 @@ public class AccountRestController {
     @GetMapping("/profile")
     public ResponseEntity<AccountDto> profile(){
         AccountDto account = accountService.readProfile();
+        log.info("profile username: {}",account.getUsername());
         return ResponseEntity.ok().body(account);
     }
 
@@ -134,7 +131,7 @@ public class AccountRestController {
             AccountDto userDto
     ){
         AccountDto dto = AccountDto.builder()
-                .password(userDto.getPassword())
+                .password(passwordEncoder.encode(userDto.getPassword()))
                 .passwordCheck(userDto.getPasswordCheck())
                 .email(userDto.getEmail())
                 .build();
@@ -178,5 +175,25 @@ public class AccountRestController {
         }
 
         return "mailauth done";
+    }
+    @PostMapping("authenticated")
+    public void authenticated(){
+        return;
+    }
+    @PostMapping("inactive")
+    public void inactive(){
+        return;
+    }
+    @PostMapping("active")
+    public void active(){
+        return;
+    }
+    @PostMapping("business")
+    public void business(){
+        return;
+    }
+    @PostMapping("admin")
+    public void admin(){
+        return;
     }
 }

@@ -91,11 +91,7 @@ public class WebSecurityConfig {
                                         "/review/{shopId}/create-view",
                                         "/review/{shopId}/update/{reviewId}",
                                         "/review/{shopId}/delete/{reviewId}"
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
-                                        Authority.ROLE_ADMIN.getAuthority()
-                                )
+                                ).authenticated()
                                 // Read Review
                                 .requestMatchers(
                                         "/review/{shopId}/read-all",
@@ -105,36 +101,21 @@ public class WebSecurityConfig {
                                 // toss
                                 .requestMatchers(
                                         "/toss/confirm-payment/{ordId}"
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
-                                        Authority.ROLE_ADMIN.getAuthority()
-                                )
+                                ).authenticated()
                                 // 사용자 주문 확인
                                 .requestMatchers(
                                         "/profile/ord-list",
                                         "/profile/read/{ordId}"
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority(),
-                                        Authority.ROLE_ADMIN.getAuthority()
-                                )
+                                ).authenticated()
                                 .requestMatchers(
                                         "/{shopId}/{productId}/request" // GET, POST
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
-                                )
-
+                                ).authenticated()
                                 // Shop CUD
                                 .requestMatchers(
                                         "/shop/create",
                                         "/shop/{shopId}/update",
                                         "/shop/{shopId}/delete"
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
-                                )
+                                ).authenticated()
                                 // Read
                                 .requestMatchers(
                                         "/shop",
@@ -142,13 +123,19 @@ public class WebSecurityConfig {
                                 ).permitAll()
                                 // Product CUD
                                 .requestMatchers(
-                                        "/shop/{shopId}/product/create",
-                                        "/shop/{shopId}/product/{productId}/update",
                                         "/shop/{shopId}/product/{productId}/delete"
-                                ).hasAnyAuthority(
-                                        Authority.ROLE_ACTIVE_USER.getAuthority(),
-                                        Authority.ROLE_BUSINESS_USER.getAuthority()
-                                )
+                                ).authenticated()
+
+                                .requestMatchers("/api/account/authenticated")
+                                .authenticated()
+                                .requestMatchers("/api/account/inactive")
+                                .hasRole(Authority.ROLE_INACTIVE_USER.getAuthority())
+                                .requestMatchers("/api/account/active")
+                                .hasRole(Authority.ROLE_ACTIVE_USER.getAuthority())
+                                .requestMatchers("/api/account/business")
+                                .hasRole(Authority.ROLE_BUSINESS_USER.getAuthority())
+                                .requestMatchers("/api/account/admin")
+                                .hasRole(Authority.ROLE_ADMIN.getAuthority())
                                 .anyRequest()
                                 .permitAll()
                 )

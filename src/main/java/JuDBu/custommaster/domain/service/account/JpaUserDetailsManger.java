@@ -37,10 +37,10 @@ public class JpaUserDetailsManger implements UserDetailsManager {
                     .authority(Authority.ROLE_ADMIN)
                     .build());
             createUser((CustomAccountDetails.builder())
-                    .username("ydh511")
+                    .username("business1")
                     .password(passwordEncoder.encode("password"))
-                    .name("yang")
-                    .email("ydh")
+                    .name("busy")
+                    .email("business@naver.com")
                     .authority(Authority.ROLE_BUSINESS_USER)
                     .build());
         }

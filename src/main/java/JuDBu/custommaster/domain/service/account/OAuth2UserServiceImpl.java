@@ -18,14 +18,15 @@ import java.util.Map;
 @Slf4j
 @Service
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
         // 어떤 서비스 제공자를 사용했는지
         String registrationId = userRequest
                 .getClientRegistration()
                 .getRegistrationId();
+        // TODO 서비스 제공자에 따라 데이터 처리를 달리 하고 싶을 때
 
         // OAuth2 제공자로 부터 받은 데이터를 원하는 방식으로 다시 정리하기 위한 Map
         Map<String, Object> attributes = new HashMap<>();
@@ -33,17 +34,22 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         // Naver 아이디로 로그인
         if (registrationId.equals("naver")) {
+            // Naver에서 받아온 정보다.
             attributes.put("provider", "naver");
 
-            // 네이버가 반환한 JSON에서 response를 회수
-            Map<String, Object> responseMap = oAuth2User.getAttribute("response");
-            attributes.put("id", responseMap.get("id"));  // username 컬럼의 값
+            Map<String, Object> responseMap
+                    // 네이버가 반환한 JSON에서 response를 회수
+                    = oAuth2User.getAttribute("response");
+            attributes.put("id", responseMap.get("id"));
             attributes.put("email", responseMap.get("email"));
             attributes.put("name", responseMap.get("name"));
             nameAttribute = "email";
         }
         log.info(attributes.toString());
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(Authority.ROLE_ACTIVE_USER.getAuthority())),attributes, nameAttribute);
+                Collections.singleton(new SimpleGrantedAuthority(Authority.ROLE_ACTIVE_USER.getAuthority())),
+                attributes,
+                nameAttribute
+        );
     }
 }
