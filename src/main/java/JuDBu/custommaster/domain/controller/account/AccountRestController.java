@@ -91,10 +91,8 @@ public class AccountRestController {
             log.info("비밀번호 오류");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        JwtResponseDto accessTokenDto = tokenService.issueAccess(userDetails);
-        log.info("1");
+        JwtResponseDto accessTokenDto = tokenService.issueAccess(userDetails);;
         JwtResponseDto refreshTokenDto = tokenService.issueRefresh(userDetails, accessTokenDto.getAccessToken());
-        log.info("2");
         Cookie cookie = new Cookie("CMToken", refreshTokenDto.getRefreshToken());
         cookie.setMaxAge(24 * 60 * 60 * 2);
         cookie.setPath("/"); // 쿠키의 경로 설정
@@ -102,7 +100,6 @@ public class AccountRestController {
         cookie.setSecure(false);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
-        log.info("3");
         return ResponseEntity.ok().body(refreshTokenDto);
     }
 
