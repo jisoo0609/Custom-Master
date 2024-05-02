@@ -2,7 +2,6 @@ package JuDBu.custommaster.domain.controller.ord.request;
 
 import JuDBu.custommaster.domain.dto.ord.OrdRequestDto;
 import JuDBu.custommaster.domain.dto.product.ProductDto;
-import JuDBu.custommaster.domain.dto.shop.ShopReadDto;
 import JuDBu.custommaster.domain.service.ProductService;
 import JuDBu.custommaster.domain.service.ShopService;
 import JuDBu.custommaster.domain.service.ord.request.OrdRequestService;
@@ -33,8 +32,8 @@ public class OrdRequestController {
             @PathVariable("productId") Long productId,
             Model model
     ) {
-        // TODO: 상점과 상품에 대한 검증 필요
-        ShopReadDto shopReadDto = shopService.readOne(shopId);
+        // 상점에 상품이 존재하는지 검증
+        productService.shopContainsFindProduct(shopId, productId);
 
         ProductDto productDto = productService.readOne(productId);
         model.addAttribute("product", productDto);
@@ -55,7 +54,7 @@ public class OrdRequestController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors());
+            log.error("errors={}", bindingResult.getAllErrors());
 
             ProductDto productDto = productService.readOne(productId);
             model.addAttribute("product", productDto);

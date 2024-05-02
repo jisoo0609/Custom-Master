@@ -33,7 +33,7 @@ public class ShopController {
             @ModelAttribute("createDto")
             ShopCreateDto createDto
     ) {
-        shopService.hasShop();
+        shopService.validAccount();
         return "shop/shop-create-form";
     }
 
@@ -48,7 +48,7 @@ public class ShopController {
     ) {
 
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors());
+            log.error("errors={}", bindingResult.getAllErrors());
             return "shop/shop-create-form";
         }
 
@@ -109,7 +109,7 @@ public class ShopController {
     ) {
 
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors());
+            log.error("errors={}", bindingResult.getAllErrors());
             return "shop/shop-update-form";
         }
 

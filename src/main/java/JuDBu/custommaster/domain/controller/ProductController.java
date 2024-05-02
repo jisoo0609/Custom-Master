@@ -52,7 +52,7 @@ public class ProductController {
     ) {
 
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors());
+            log.error("errors={}", bindingResult.getAllErrors());
             return "product/product-create-form";
         }
 
@@ -94,7 +94,7 @@ public class ProductController {
             RedirectAttributes redirectAttributes
     ) {
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors());
+            log.error("errors={}", bindingResult.getAllErrors());
             return "product/product-update-form";
         }
 
