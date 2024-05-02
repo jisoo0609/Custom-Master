@@ -7,51 +7,75 @@
 <body class="p-3">
 <h1>판매중</h1>
 <hr>
-<div id="product-list">
-
-</div>
+<div id="product-list"></div>
+<a href="/payment/ord-readAll.html">주문 전체 목록</a>
 <script>
-    const productListDiv = document.getElementById('product-list')
+    const productListDiv = document.getElementById('product-list');
 
     // render product list
     const renderProductList = () => {
         fetch('/items').then(async response => {
-            const productList = await response.json()
-            productListDiv.classList.add('container')
-            const rowDiv = document.createElement('div')
-            rowDiv.classList.add('row')
-            productListDiv.appendChild(rowDiv)
+            const productList = await response.json();
+            productListDiv.classList.add('container');
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('row');
+            productListDiv.appendChild(rowDiv);
 
             for (const product of productList) {
-                const colDiv = document.createElement('div')
-                colDiv.classList.add('col-6', 'col-lg-3', 'p-3')
-                const card = document.createElement('div')
-                card.classList.add('card')
+                const colDiv = document.createElement('div');
+                colDiv.classList.add('col-6', 'col-lg-3', 'p-3');
+                const card = document.createElement('div');
+                card.classList.add('card');
 
-                const cardBody = document.createElement('div')
-                cardBody.classList.add('card-body')
+                const cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
 
-                const cardTitle = document.createElement('h5')
-                cardTitle.classList.add('card-title')
-                cardTitle.innerText = product.name
-                cardBody.appendChild(cardTitle)
-                const cardText = document.createElement('p')
-                cardText.classList.add('card-text')
-                cardText.innerText = product.exPrice
-                cardBody.appendChild(cardText)
+                const cardTitle = document.createElement('h5');
+                cardTitle.classList.add('card-title');
+                cardTitle.innerText = product.name;
+                cardBody.appendChild(cardTitle);
 
-                const buyButton = document.createElement('a')
-                buyButton.href = `/payment/item.html?id=${product.id}`
-                buyButton.text = '사러가기'
-                buyButton.classList.add('btn', 'btn-primary')
-                cardBody.appendChild(buyButton)
-                card.appendChild(cardBody)
-                colDiv.appendChild(card)
-                rowDiv.appendChild(colDiv)
+                const cardText = document.createElement('p');
+                cardText.classList.add('card-text');
+                cardText.innerText = product.exPrice;
+                cardBody.appendChild(cardText);
+
+                const buyButton = document.createElement('button');
+                buyButton.innerText = '주문하기';
+                buyButton.classList.add('btn', 'btn-primary');
+                buyButton.onclick = () => createOrder(product.id);
+                cardBody.appendChild(buyButton);
+
+                card.appendChild(cardBody);
+                colDiv.appendChild(card);
+                rowDiv.appendChild(colDiv);
             }
+        });
+    };
+
+    const createOrder = (productId) => {
+        const payload = {
+            productId: productId
+        };
+
+        fetch('/toss/ord-create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
         })
-    }
-    renderProductList()
+            .then(response => response.json())
+            .then(data => {
+                console.log('Order created:', data);
+                location.pathname = '/payment/ord-readAll.html'
+
+                // window.location.href = `/payment/ord-readAll`; // Assuming the response has `ordId`
+            })
+            .catch(error => console.error('Error creating order:', error));
+    };
+
+    renderProductList();
 </script>
 </body>
 </html>
