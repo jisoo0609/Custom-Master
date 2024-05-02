@@ -17,8 +17,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ydh511@gmail.com
-    password: djfj bswx gttd tuhf
+    username: username
+    password: password
     properties:
       mail:
         smtp:
@@ -38,8 +38,8 @@ spring:
             user-name-attribute: response
         registration:
           naver:
-            client-id: 638_pdO3hymFy1KINocm
-            client-secret: 2UvitSpUc9
+            client-id: id
+            client-secret: secret
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
@@ -51,11 +51,11 @@ toss:
   secret: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6
 ncp:
   api:
-    client-id: re2p8027kc
-    client-secret: QZ0gf3e6IqurEFZ6oaqmnBeJ1Wrpz53Bi0h0E4KM
+    client-id: id
+    client-secret: secret
 
-    api-access: bayBaYR8dcwmMeO2XLqE
-    api-secret: ilCwHf4BYfA2yr0u0LgpqpZMaNF5oH5tdXwBmNcS
+    api-access: access
+    api-secret: secret
 
 jwt:
   secret: aaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaes
